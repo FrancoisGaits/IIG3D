@@ -5,4 +5,8 @@ cmake_install.cmake
 Makefile
 
 *~
+bin
 src/*~
+
+clion*
+.idea
