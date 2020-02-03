@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>512</width>
+    <height>512</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Hello OpenGL ...</string>
+  </property>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>512</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuInfo">
+    <property name="title">
+     <string>Info</string>
+    </property>
+    <addaction name="action_Version_OpenGL"/>
+   </widget>
+   <widget class="QMenu" name="menu_Demo">
+    <property name="title">
+     <string>&amp;Demo</string>
+    </property>
+    <addaction name="actionHello_clear"/>
+    <addaction name="actionHello_triangle"/>
+    <addaction name="actionHello_camera"/>
+    <addaction name="actionHello_spheres"/>
+   </widget>
+   <addaction name="menu_Demo"/>
+   <addaction name="menuInfo"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="action_Version_OpenGL">
+   <property name="text">
+    <string>&amp;Version OpenGL</string>
+   </property>
+  </action>
+  <action name="actionHello_triangle">
+   <property name="text">
+    <string>Hello triangle ...</string>
+   </property>
+  </action>
+  <action name="actionHello_camera">
+   <property name="text">
+    <string>Hello camera ...</string>
+   </property>
+  </action>
+  <action name="actionHello_spheres">
+   <property name="text">
+    <string>Hello spheres ...</string>
+   </property>
+  </action>
+  <action name="actionHello_clear">
+   <property name="text">
+    <string>Hello clear ...</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
