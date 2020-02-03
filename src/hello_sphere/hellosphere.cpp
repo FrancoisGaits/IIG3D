@@ -24,7 +24,7 @@ static const char* vertexshader_source ="#version 410 core\n\
         {\n\
             // Note that we read the multiplication from right to left\n\
             gl_Position = projection * view * model * vec4(position, 1.0f);\n\
-            normal = -position;\n\
+            normal = inormal;\n\
             fragPos = vec3( model * vec4(position, 1.0f));\n\
         }\n";
 
@@ -38,12 +38,11 @@ static const char* fragmentshader_source ="#version 410 core\n\
         }\n";
 
 static const char* fragmentshader_lambert = "#version 410 core\n\
-        in vec3 normal;\n\
         in vec3 fragPos;\n\
         out vec4 color;\n\
         void main()\n\
         {\n\
-            color = vec4( clamp( dot(normalize(normal),normalize(vec3(0.0, 2.0, .5)-fragPos)), 0, 1 ) * vec3(1.0,1.0,1.0), 1.0);\n\
+            color = vec4( clamp( dot(normalize(cross(dFdx(fragPos),dFdy(fragPos))),normalize(vec3(0.0, 20.0, .5)-fragPos)), 0, 1 ) * vec3(1.0,1.0,1.0), 1.0);\n\
         }\n";
 
 SimpleSphere::SimpleSphere(int width, int height) : OpenGLDemo(width, height), _activecamera(0), _camera(nullptr) {

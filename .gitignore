@@ -4,6 +4,8 @@ CMakeCache.txt
 cmake_install.cmake
 Makefile
 
+*.cbp
+
 *~
 bin
 src/*~
