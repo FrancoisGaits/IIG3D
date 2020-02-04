@@ -4,6 +4,7 @@
 #include "opengldemo.h"
 
 #include "hello_camera/camera.h"
+#include "shaders.hpp"
 
 #include <memory>
 #include <functional>
@@ -36,9 +37,9 @@ private:
     GLuint _nbo;
     GLuint _ebo;
 
-    // Shader program for rendering
-    GLuint _program;
-
+    //Shaders
+    Shader shader;
+    
     // for mouse management
     int _button; // 0 --> left. 1 --> right. 2 --> middle. 3 --> other
     float _mousex{0};

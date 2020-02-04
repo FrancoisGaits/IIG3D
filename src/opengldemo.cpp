@@ -20,7 +20,7 @@ void OpenGLDemo::draw() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     if (_drawfill)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glPolygonMode(GL_FRONT, GL_FILL);
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
