@@ -12,8 +12,7 @@
 
 #define deg2rad(x) float(M_PI)*(x)/180.f
 
-SimpleSphere::SimpleSphere(int width, int height) : OpenGLDemo(width, height), _activecamera(0), _camera(nullptr), 
-    shader("../src/shaders/shader.vs", "../src/shaders/shader.fs") {
+SimpleSphere::SimpleSphere(int width, int height) : OpenGLDemo(width, height), shader("../src/shaders/shader.vs", "../src/shaders/shader.fs"), _activecamera(0), _camera(nullptr) {
     // Initialise geometric data
     _vertices = {
         0.f,   0.5f, -0.5f,  // Top 
