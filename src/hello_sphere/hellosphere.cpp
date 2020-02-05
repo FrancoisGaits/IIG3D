@@ -13,26 +13,8 @@
 #define deg2rad(x) float(M_PI)*(x)/180.f
 
 SimpleSphere::SimpleSphere(int width, int height) : OpenGLDemo(width, height), shader("../src/shaders/shader.vs", "../src/shaders/shader.fs"), _activecamera(0), _camera(nullptr) {
-    // Initialise geometric data
-    _vertices = {
-        0.f,   0.5f, -0.5f,  // Top 
-        0.5f, -0.5f, 0.0f,  // Bottom Right
-       -0.5f, -0.5f, 0.0f,  // Bottom Left
-        0.0f,  -0.5f, -1.f   // Back
-    };
-    _normals = {
-        0.f, 0.5f, -0.5f,
-        0.5f, -0.5f, 0.f,
-        -0.5f, -0.5f, 0.f,
-        0.f, -0.5f, -1.f
-    };
-    _indices = {
-        // Note that we start from 0!
-        0, 1, 2,   // First Triangle
-        1, 2, 3,    // Second Triangle
-	0, 3, 1,
-	0, 3, 2
-    };
+
+    generateSphereAttributes(2, 4, _vertices, _normals, _indices);
 
     // Initialize the geometry
     // 1. Generate geometry buffers
@@ -152,4 +134,35 @@ bool SimpleSphere::keyboard(unsigned char k) {
         default:
             return false;
     }
+}
+void SimpleSphere::generateSphereAttributes(unsigned nbParallels, unsigned nbMeridians, std::vector<GLfloat> &vertices, std::vector<GLfloat> &normals, std::vector<GLuint> &indices) {
+    double theta = M_PI/2;
+    double phi = 0;
+    double pasTheta = M_PI/(nbParallels-1);
+    double pasPhi = M_PI/(nbMeridians-1);
+
+    //TODO optimiser en passant direct par theta/phi
+    for(unsigned para = 0; para < nbParallels; ++para) {
+        phi = 0;
+        if(para == 0 || para == nbParallels-1) {
+            vertices.emplace_back( cos(phi)*cos(theta) );
+            vertices.emplace_back( cos(phi)*sin(theta) );
+            vertices.emplace_back( sin(phi) );
+        } else {
+            for(unsigned meri = 0; meri < nbMeridians; ++meri) {
+                vertices.emplace_back( cos(phi)*cos(theta) );
+                vertices.emplace_back( cos(phi)*sin(theta) );
+                vertices.emplace_back( sin(phi) );
+                phi += pasPhi;
+            }
+        }
+        theta += pasTheta;
+    }
+
+    //TODO changer pour un centre différent de 000
+    normals = vertices;
+
+    //TODO calcul des indices
+
+
 }
