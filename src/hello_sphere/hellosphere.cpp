@@ -128,15 +128,19 @@ void SimpleSphere::generateSphereAttributes(unsigned nbParallels, unsigned nbMer
     for (unsigned para = 0; para < nbParallels; ++para) {
         phi = 0;
         if (para == 0 || para == nbParallels - 1) {
+
             vertices.emplace_back(cosf(theta) * cosf(phi) * radius);
-            vertices.emplace_back(cosf(theta) * sinf(phi) * radius);
             vertices.emplace_back(sinf(theta) * radius);
+            vertices.emplace_back(cosf(theta) * sinf(phi) * radius);
+
 
         } else {
             for (unsigned meri = 0; meri < nbMeridians; ++meri) {
                 vertices.emplace_back(cosf(theta) * cosf(phi) * radius);
-                vertices.emplace_back(cosf(theta) * sinf(phi) * radius);
+
                 vertices.emplace_back(sinf(theta) * radius);
+
+                vertices.emplace_back(cosf(theta) * sinf(phi) * radius);
                 //std::cout << theta << " " << phi << " || x:" << cos(theta)*cos(phi) << " | y:" << cos(theta)*sin(phi) << " | z:" << sin(theta) << std::endl;
                 phi += pasPhi;
             }
@@ -195,7 +199,7 @@ void SimpleSphere::generateSphereAttributes(unsigned nbParallels, unsigned nbMer
             }
         }
     }
-
+    /*
     int o = 0;
     for (unsigned i: indices) {
         if (o++ % 3 == 0) {
@@ -204,8 +208,7 @@ void SimpleSphere::generateSphereAttributes(unsigned nbParallels, unsigned nbMer
         std::cout << i << "|";
     }
     std::cout << std::endl;
-
-    /*int o = 0;
+    int o = 0;
     for (float i : vertices) {
         if (o++ % 3 == 0) {
             std::cout << "]" << std::endl << "[";
