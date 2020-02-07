@@ -14,33 +14,7 @@
 
 SimpleSphere::SimpleSphere(int width, int height) : OpenGLDemo(width, height), shader("../src/shaders/shader.vs", "../src/shaders/shader.fs"), _activecamera(0), _camera(nullptr) {
 
-    generateSphereAttributes(2, 4, _vertices, _normals, _indices);
-
-    // Initialize the geometry
-    // 1. Generate geometry buffers
-    glGenBuffers(1, &_vbo) ;
-    glGenBuffers(1, &_nbo) ;
-    glGenBuffers(1, &_ebo) ;
-    glGenVertexArrays(1, &_vao) ;
-    // 2. Bind Vertex Array Object
-    glBindVertexArray(_vao);
-        // 3. Copy our vertices array in a buffer for OpenGL to use
-        glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-        glBufferData(GL_ARRAY_BUFFER, _vertices.size()*sizeof (GLfloat), _vertices.data(), GL_STATIC_DRAW);
-        // 4. Then set our vertex attributes pointers
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-        glEnableVertexAttribArray(0);
-        // 5. Copy our normals array in a buffer for OpenGL to use
-        glBindBuffer(GL_ARRAY_BUFFER, _nbo);
-        glBufferData(GL_ARRAY_BUFFER, _normals.size()*sizeof (GLfloat), _normals.data(), GL_STATIC_DRAW);
-        // 6. Copy our vertices array in a buffer for OpenGL to use
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-        glEnableVertexAttribArray(1);
-        // 7. Copy our index array in a element buffer for OpenGL to use
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size()*sizeof (GLfloat), _indices.data(), GL_STATIC_DRAW);
-    //6. Unbind the VAO
-    glBindVertexArray(0);
+    generateSphereAttributes(5, 3, 0.35, _vertices, _normals, _indices);
     
 // Initialize the geometry
     // 1. Generate geometry buffers
@@ -135,24 +109,28 @@ bool SimpleSphere::keyboard(unsigned char k) {
             return false;
     }
 }
-void SimpleSphere::generateSphereAttributes(unsigned nbParallels, unsigned nbMeridians, std::vector<GLfloat> &vertices, std::vector<GLfloat> &normals, std::vector<GLuint> &indices) {
-    double theta = M_PI/2;
-    double phi = 0;
-    double pasTheta = M_PI/(nbParallels-1);
-    double pasPhi = M_PI/(nbMeridians-1);
+void SimpleSphere::generateSphereAttributes(unsigned nbParallels, unsigned nbMeridians, float radius, std::vector<GLfloat> &vertices, std::vector<GLfloat> &normals, std::vector<GLuint> &indices) {
+    float theta = M_PI/2;
+    float phi = 0;
+    float pasTheta = M_PI/(nbParallels-1);
+    float pasPhi =2*M_PI/(nbMeridians);
 
+    unsigned nbPoints((nbParallels-2)*nbMeridians + 2);
+    
     //TODO optimiser en passant direct par theta/phi
     for(unsigned para = 0; para < nbParallels; ++para) {
         phi = 0;
         if(para == 0 || para == nbParallels-1) {
-            vertices.emplace_back( cos(phi)*cos(theta) );
-            vertices.emplace_back( cos(phi)*sin(theta) );
-            vertices.emplace_back( sin(phi) );
+            vertices.emplace_back( cosf(phi)*cosf(theta) * radius);
+            vertices.emplace_back( cosf(phi)*sinf(theta) * radius);
+            vertices.emplace_back( sinf(phi) * radius);
+	    
         } else {
             for(unsigned meri = 0; meri < nbMeridians; ++meri) {
-                vertices.emplace_back( cos(phi)*cos(theta) );
-                vertices.emplace_back( cos(phi)*sin(theta) );
-                vertices.emplace_back( sin(phi) );
+                vertices.emplace_back( cosf(phi)*cosf(theta) * radius);
+                vertices.emplace_back( cosf(phi)*sinf(theta) * radius);
+                vertices.emplace_back( sinf(phi) * radius);
+		//std::cout << theta << " " << phi << " || x:" << cos(phi)*cos(theta) << " | y:" << cos(phi)*sin(theta) << " | z:" << sin(phi) << std::endl;
                 phi += pasPhi;
             }
         }
@@ -163,6 +141,74 @@ void SimpleSphere::generateSphereAttributes(unsigned nbParallels, unsigned nbMer
     normals = vertices;
 
     //TODO calcul des indices
+    /*
+    indices = {
+      0, 1, 2,
+      0, 2, 3,
+      0, 3, 4,
+      0, 4, 1,
+      5, 2, 1,
+      5, 3, 2,
+      5, 4, 3,
+      5, 1, 4
+    };
+    */
 
+    for(unsigned para = 0; para < nbParallels-1; ++para) {
+	if(para == 0) {
+	    for(unsigned meri = 1; meri <= nbMeridians; ++meri) {
+		indices.emplace_back(0);
+		indices.emplace_back(meri);
+		indices.emplace_back( meri+1 > nbMeridians ? 1 : meri+1 );
+	    }
+	} else if (para == nbParallels-2) {
+	    for(unsigned meri = 1; meri <= nbMeridians; ++meri) {
+		indices.emplace_back(nbPoints-1);
+		indices.emplace_back(nbPoints-meri-1);
+		indices.emplace_back(nbPoints-( meri+1 > nbMeridians ? 1 : meri+1 )-1);
+	    }
+	} else {
+	    unsigned dec = (nbMeridians*(para-1));
+	    for(unsigned meri = 1; meri <= nbMeridians; ++meri) {
+		int a = meri  +dec;
+		int b = ( meri == nbMeridians ? 1 : meri+1 )  +dec;
+		int c = meri+nbMeridians  +dec;
+		int d = ( meri == nbMeridians ? nbMeridians+1 : meri+nbMeridians+1  )  +dec;
 
+		int e = a;
+		a = d;
+		d = e;
+//triangle inferieur
+		indices.emplace_back(d);
+		indices.emplace_back(c);
+		indices.emplace_back(a);
+
+		//triangle superieur
+		indices.emplace_back(b);
+		indices.emplace_back(d);
+		indices.emplace_back(a);
+	    }
+	}
+    }
+
+    std::cout << vertices.size() << std::endl;
+    std::cout << indices.size() << std::endl;
+    
+    int o = 0;
+    for(double i : vertices) {
+	if(o++%3 == 0) {
+	    std::cout << std::endl << (o-1)/3 << " : ";
+	}
+	std::cout << i  << "|";
+    }
+    std::cout << std::endl;
+
+    o = 0;
+    for(int i : indices) {
+	if(o++%3 == 0) {
+	    std::cout << std::endl;
+	}
+	std::cout << i  << "|";
+    }
+    std::cout << std::endl;
 }
