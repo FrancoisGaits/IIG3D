@@ -11,12 +11,14 @@
 
 
 #define deg2rad(x) float(M_PI)*(x)/180.f
+#define gr 1.61803398875f
 
 SimpleSphere::SimpleSphere(int width, int height) : OpenGLDemo(width, height),
                                                     shader("../src/shaders/shader.vs", "../src/shaders/shader.fs"),
                                                     _activecamera(0), _camera(nullptr) {
 
-    generateSphereAttributes(12, 12, 0.35, _vertices, _normals, _indices);
+    //generateUVSphereAttributes(10, 10, 0.35, _vertices, _normals, _indices);
+    generateGeoSphereAttributes(1,0.35, _vertices, _normals, _indices);
 
 // Initialize the geometry
     // 1. Generate geometry buffers
@@ -114,56 +116,36 @@ bool SimpleSphere::keyboard(unsigned char k) {
     }
 }
 
-void SimpleSphere::generateSphereAttributes(unsigned nbParallels, unsigned nbMeridians, float radius,
+void SimpleSphere::generateUVSphereAttributes(unsigned nbParallels, unsigned nbMeridians, float radius,
                                             std::vector<GLfloat> &vertices, std::vector<GLfloat> &normals,
                                             std::vector<GLuint> &indices) {
     float theta = M_PI / 2;
     float phi = 0;
     float pasTheta = M_PI / (nbParallels - 1);
-    float pasPhi = 2 * M_PI / (nbMeridians);
+    float pasPhi = 2.f * M_PI / (nbMeridians);
 
     unsigned nbPoints((nbParallels - 2) * nbMeridians + 2);
 
-    //TODO optimiser en passant direct par theta/phi
     for (unsigned para = 0; para < nbParallels; ++para) {
         phi = 0;
         if (para == 0 || para == nbParallels - 1) {
-
             vertices.emplace_back(cosf(theta) * cosf(phi) * radius);
             vertices.emplace_back(sinf(theta) * radius);
             vertices.emplace_back(cosf(theta) * sinf(phi) * radius);
-
-
         } else {
             for (unsigned meri = 0; meri < nbMeridians; ++meri) {
                 vertices.emplace_back(cosf(theta) * cosf(phi) * radius);
-
                 vertices.emplace_back(sinf(theta) * radius);
-
                 vertices.emplace_back(cosf(theta) * sinf(phi) * radius);
-                //std::cout << theta << " " << phi << " || x:" << cos(theta)*cos(phi) << " | y:" << cos(theta)*sin(phi) << " | z:" << sin(theta) << std::endl;
+
                 phi += pasPhi;
             }
         }
+
         theta += pasTheta;
     }
 
-    //TODO changer pour un centre différent de 000
     normals = vertices;
-
-    //TODO calcul des indices
-    /*
-    indices = {
-      0, 1, 2,
-      0, 2, 3,
-      0, 3, 4,
-      0, 4, 1,
-      5, 2, 1,
-      5, 3, 2,
-      5, 4, 3,
-      5, 1, 4
-    };
-    */
 
     for (unsigned para = 0; para < nbParallels - 1; ++para) {
         if (para == 0) {
@@ -180,18 +162,15 @@ void SimpleSphere::generateSphereAttributes(unsigned nbParallels, unsigned nbMer
             }
         } else {
             unsigned dec = (nbMeridians * (para - 1));
-            for (unsigned meri = 1; meri <= nbMeridians; ++meri) {
-                unsigned a = meri + dec;
-                unsigned b = (meri == nbMeridians ? 1 : meri + 1) + dec;
-                unsigned c = meri + nbMeridians + dec;
-                unsigned d = (meri == nbMeridians ? nbMeridians + 1 : meri + nbMeridians + 1) + dec;
-
-
-                //triangle inferieur
+            for (unsigned meri = 1; meri <= nbMeridians; ++meri) {                                  // a------------b
+                unsigned a = meri + dec;                                                            // | \          |
+                unsigned b = (meri == nbMeridians ? 1 : meri + 1) + dec;                            // |    \       |
+                unsigned c = meri + nbMeridians + dec;                                              // |       \    |
+                unsigned d = (meri == nbMeridians ? nbMeridians + 1 : meri + nbMeridians + 1) + dec;// |          \ |
+                //triangle inferieur                                                                // d------------c
                 indices.emplace_back(a);
                 indices.emplace_back(c);
                 indices.emplace_back(d);
-
                 //triangle superieur
                 indices.emplace_back(a);
                 indices.emplace_back(d);
@@ -199,21 +178,65 @@ void SimpleSphere::generateSphereAttributes(unsigned nbParallels, unsigned nbMer
             }
         }
     }
-    /*
-    int o = 0;
-    for (unsigned i: indices) {
-        if (o++ % 3 == 0) {
-            std::cout << std::endl << (o - 1) / 3 << " : ";
-        }
-        std::cout << i << "|";
-    }
-    std::cout << std::endl;
-    int o = 0;
-    for (float i : vertices) {
-        if (o++ % 3 == 0) {
+}
+
+void SimpleSphere::generateGeoSphereAttributes(unsigned nbDiv, float radius, std::vector<GLfloat> &vertices, std::vector<GLfloat> &normals, std::vector<GLuint> &indices) {
+    float a = radius;
+    vertices = {
+            a/2.f, a*gr/2.f, 0,
+            a*gr/2.f, 0, a/2.f,
+            0, a/2.f, a*gr/2.f,
+
+            -a/2.f, a*gr/2.f, 0,
+            0, a/2.f, -a*gr/2.f,
+            a*gr/2.f, 0, -a/2.f,
+
+
+            a/2.f, -a*gr/2.f, 0,
+            0, -a/2.f, a*gr/2.f,
+            -a*gr/2.f, 0, a/2.f,
+
+
+            -a*gr/2.f, 0, -a/2.f,
+            0, -a/2.f, -a*gr/2.f,
+            -a/2.f, -a*gr/2.f, 0
+    };
+
+    normals = vertices;
+
+    indices = {
+            0, 2, 1,
+            0, 1, 5,
+            0, 5, 4,
+            0, 4, 3,
+            0, 3, 2,
+
+            11, 6, 10,
+            11, 7, 6,
+            11, 8, 7,
+            11, 9, 8,
+            11, 10, 9,
+
+            1, 7, 6,
+            5, 6, 10,
+            4, 10, 9,
+            3, 9, 8,
+            2, 8, 7,
+
+            10, 5, 4,
+            9, 4, 3,
+            8, 2, 3,
+            7, 1, 2,
+            6, 5, 1
+    };
+
+   /* int o = 0;
+    for(double i : vertices) {
+        if(o++%3==0) {
             std::cout << "]" << std::endl << "[";
         }
-        std::cout << ((i < 1e-4 && i > -1e-4)? 0 : i) << ", ";
+        std::cout << i << (o%3 ? ",":"");
     }
-    std::cout << std::endl;*/
+    std::cout << std::endl;
+*/
 }

@@ -26,7 +26,9 @@ public:
     bool keyboard(unsigned char k) override;
 
 private:
-    void generateSphereAttributes(unsigned nbParrallels, unsigned nbMeridians, float radius, std::vector<GLfloat> &vertices, std::vector<GLfloat> &normals, std::vector<GLuint> &indices);
+    void generateUVSphereAttributes(unsigned nbParrallels, unsigned nbMeridians, float radius, std::vector<GLfloat> &vertices, std::vector<GLfloat> &normals, std::vector<GLuint> &indices);
+
+    void generateGeoSphereAttributes(unsigned nbDiv, float radius, std::vector<GLfloat> &vertices, std::vector<GLfloat> &normals, std::vector<GLuint> &indices);
 
     // A simple geometry
     std::vector<GLfloat> _vertices;
