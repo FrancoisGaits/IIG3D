@@ -17,8 +17,8 @@ SimpleSphere::SimpleSphere(int width, int height) : OpenGLDemo(width, height),
                                                     shader("../src/shaders/shader.vs", "../src/shaders/shader.fs"),
                                                     _activecamera(0), _camera(nullptr) {
 
-    //generateUVSphereAttributes(10, 10, 0.35, _vertices, _normals, _indices);
-    generateGeoSphereAttributes(1,0.35, _vertices, _normals, _indices);
+    //generateUVSphereAttributes(100, 100, 0.35, _vertices, _normals, _indices);
+    generateGeoSphereAttributes(1,0.40, _vertices, _normals, _indices);
 
 // Initialize the geometry
     // 1. Generate geometry buffers
@@ -180,6 +180,17 @@ void SimpleSphere::generateUVSphereAttributes(unsigned nbParallels, unsigned nbM
     }
 }
 
+void computeHalfVertex(float radius, const float v1[3], const float v2[3], float newV[3])
+{
+    newV[0] = v1[0] + v2[0];    // x
+    newV[1] = v1[1] + v2[1];    // y
+    newV[2] = v1[2] + v2[2];    // z
+    float scale = radius / sqrtf(newV[0]*newV[0] + newV[1]*newV[1] + newV[2]*newV[2]);
+    newV[0] *= scale;
+    newV[1] *= scale;
+    newV[2] *= scale;
+}
+
 void SimpleSphere::generateGeoSphereAttributes(unsigned nbDiv, float radius, std::vector<GLfloat> &vertices, std::vector<GLfloat> &normals, std::vector<GLuint> &indices) {
     float a = radius;
     vertices = {
@@ -230,13 +241,14 @@ void SimpleSphere::generateGeoSphereAttributes(unsigned nbDiv, float radius, std
             6, 5, 1
     };
 
-   /* int o = 0;
-    for(double i : vertices) {
-        if(o++%3==0) {
-            std::cout << "]" << std::endl << "[";
-        }
-        std::cout << i << (o%3 ? ",":"");
-    }
-    std::cout << std::endl;
-*/
+
+    /* int o = 0;
+     for(double i : vertices) {
+         if(o++%3==0) {
+             std::cout << "]" << std::endl << "[";
+         }
+         std::cout << i << (o%3 ? ",":"");
+     }
+     std::cout << std::endl;
+ */
 }
