@@ -16,7 +16,7 @@ UVSphere::UVSphere(int width, int height, std::string fsPath) : OpenGLDemo(width
 								shader("../src/shaders/shader.vs", fsPath.data()),
 								_activecamera(1), _camera(nullptr) {
 
-    generateUVSphereAttributes(10, 10, 0.35);
+    generateUVSphereAttributes(50, 50, 0.35);
 
     mesh.load();
 

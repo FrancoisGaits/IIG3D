@@ -13,7 +13,7 @@
 MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent)/*, QOpenGLFunctions_4_1_Core()*/,
                                                   _openglDemo(nullptr), _lastime(0) {
 
-    currentFs = "../src/shaders/shaderErreur.fs";
+    currentFs = "../src/shaders/shaderLambert.fs";
     // add all demo constructors here
     _democonstructors.push_back([](int width, int height) -> OpenGLDemo * {
         std::cout << "Clear" << std::endl;
