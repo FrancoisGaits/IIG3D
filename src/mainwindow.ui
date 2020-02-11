@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Jeu de mot Engine</string>
+   <string>変人 Engine</string>
   </property>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -34,7 +34,15 @@
     </property>
     <addaction name="action_Version_OpenGL"/>
    </widget>
-   <widget class="QMenu" name="menu_Demo">
+   <widget class="QMenu" name="menuShader">
+    <property name="title">
+     <string>Shaders</string>
+    </property>
+    <addaction name="action_shaderLambert"/>
+    <addaction name="action_shaderFacette"/>
+    <addaction name="action_shaderErreur"/>
+   </widget>
+   <widget class="QMenu" name="menu_scenes">
     <property name="title">
      <string>Scenes</string>
     </property>
@@ -42,7 +50,8 @@
     <addaction name="actionUV_Sphere"/>
     <addaction name="actionGeo_Sphere"/>
    </widget>
-   <addaction name="menu_Demo"/>
+   <addaction name="menu_scenes"/>
+   <addaction name="menuShader"/>
    <addaction name="menuInfo"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -73,6 +82,30 @@
    </property>
    <property name="toolTip">
     <string>Display Geo Sphere</string>
+   </property>
+  </action>
+  <action name="action_shaderLambert">
+   <property name="text">
+    <string>Lambert</string>
+   </property>
+   <property name="toolTip">
+    <string>Use Lambert lightning</string>
+   </property>
+  </action>
+  <action name="action_shaderFacette">
+   <property name="text">
+    <string>Facette</string>
+   </property>
+   <property name="toolTip">
+    <string>Use Facette specific lightning</string>
+   </property>
+  </action>
+  <action name="action_shaderErreur">
+   <property name="text">
+    <string>Erreur</string>
+   </property>
+   <property name="toolTip">
+    <string>Use error lightning</string>
    </property>
   </action>
  </widget>

@@ -24,6 +24,8 @@ public:
     // Demo management
     void activatedemo(unsigned int numdemo);
 
+    void switchFragmentShader(std::string shaderPath);
+    
 public slots:
     void cleanup();
 
@@ -40,11 +42,16 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
 private :
+    std::string currentFs;
+    int currDemo;
+    
     std::unique_ptr<OpenGLDemo> _openglDemo;
 
     using DemoConstructors=std::function<OpenGLDemo*(int, int)>;
     std::vector<DemoConstructors> _democonstructors;
 
+    void resetScene();
+    
     // for event management
     std::int64_t _lastime;
 };

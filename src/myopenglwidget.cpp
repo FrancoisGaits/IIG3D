@@ -12,19 +12,26 @@
 
 MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent)/*, QOpenGLFunctions_4_1_Core()*/,
                                                   _openglDemo(nullptr), _lastime(0) {
+
+    currentFs = "../src/shaders/shaderErreur.fs";
     // add all demo constructors here
     _democonstructors.push_back([](int width, int height) -> OpenGLDemo * {
         std::cout << "Clear" << std::endl;
         return new OpenGLDemo(width, height);
     });
-    _democonstructors.push_back([](int width, int height) -> OpenGLDemo * {
+    _democonstructors.push_back([this](int width, int height) -> OpenGLDemo * {
         std::cout << "Displaying UV Sphere" << std::endl;
-        return new UVSphere(width, height);
+        return new UVSphere(width, height, currentFs);
     });
-    _democonstructors.push_back([](int width, int height) -> OpenGLDemo * {
+    _democonstructors.push_back([this](int width, int height) -> OpenGLDemo * {
         std::cout << "Displaying Geo Sphere" << std::endl;
-        return new GeoSphere(width, height);
+        return new GeoSphere(width, height, currentFs);
     });
+}
+
+void MyOpenGLWidget::switchFragmentShader(std::string shaderPath) {
+    currentFs = shaderPath;
+    resetScene();
 }
 
 MyOpenGLWidget::~MyOpenGLWidget() {
@@ -46,13 +53,15 @@ void MyOpenGLWidget::cleanup() {
 void MyOpenGLWidget::initializeGL() {
     connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &MyOpenGLWidget::cleanup);
 
+    currDemo = 1;
+    
     if (!initializeOpenGLFunctions()) {
         QMessageBox::critical(this, "OpenGL initialization error",
                               "MyOpenGLWidget::initializeGL() : Unable to initialize OpenGL functions");
         exit(1);
     }
     // Initialize OpenGL and all OpenGL dependent stuff below
-    _openglDemo.reset(_democonstructors[1](width(), height()));
+    _openglDemo.reset(_democonstructors[currDemo](width(), height()));
 }
 
 void MyOpenGLWidget::paintGL() {
@@ -127,8 +136,13 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
     }
 }
 
+void MyOpenGLWidget::resetScene() {
+    activatedemo(currDemo);
+}
+
 void MyOpenGLWidget::activatedemo(unsigned int numdemo) {
     if (numdemo < _democonstructors.size()) {
+	currDemo = numdemo;
         std::cout << "Performing (" << numdemo << ") : ";
         makeCurrent();
         _openglDemo.reset(_democonstructors[numdemo](width(), height()));

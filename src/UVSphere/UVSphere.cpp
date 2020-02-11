@@ -11,13 +11,12 @@
 
 
 #define deg2rad(x) float(M_PI)*(x)/180.f
-#define gr 1.61803398875f
 
-UVSphere::UVSphere(int width, int height) : OpenGLDemo(width, height),
-                                            shader("../src/shaders/shader.vs", "../src/shaders/shader.fs"),
-                                            _activecamera(1), _camera(nullptr) {
+UVSphere::UVSphere(int width, int height, std::string fsPath) : OpenGLDemo(width, height),
+								shader("../src/shaders/shader.vs", fsPath.data()),
+								_activecamera(1), _camera(nullptr) {
 
-    generateUVSphereAttributes(100, 100, 0.35);
+    generateUVSphereAttributes(10, 10, 0.35);
 
     mesh.load();
 
@@ -128,7 +127,7 @@ void UVSphere::generateUVSphereAttributes(unsigned nbParallels, unsigned nbMerid
                 unsigned b = (meri == nbMeridians ? 1 : meri + 1) + dec;                            // |    \       |
                 unsigned c = meri + nbMeridians + dec;                                              // |       \    |
                 unsigned d = (meri == nbMeridians ? nbMeridians + 1 : meri + nbMeridians + 1) + dec;// |          \ |
-                // d------------c
+                                                                                                    // d------------c
                 mesh.addQuad(a, b, c, d);
             }
         }

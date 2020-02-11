@@ -15,7 +15,7 @@
  */
 class GeoSphere : public OpenGLDemo {
 public:
-    explicit GeoSphere(int width, int height);
+  explicit GeoSphere(int width, int height, std::string fsPath);
 
     void resize(int width, int height) override;
 

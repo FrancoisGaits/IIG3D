@@ -13,9 +13,9 @@
 #define deg2rad(x) float(M_PI)*(x)/180.f
 #define gr 1.61803398875f
 
-GeoSphere::GeoSphere(int width, int height) : OpenGLDemo(width, height),
-                                              shader("../src/shaders/shader.vs", "../src/shaders/shader.fs"),
-                                              _activecamera(1), _camera(nullptr) {
+GeoSphere::GeoSphere(int width, int height, std::string fsPath) : OpenGLDemo(width, height),
+								  shader("../src/shaders/shader.vs", fsPath.data()),
+								  _activecamera(1), _camera(nullptr) {
 
     generateGeoSphereAttributes(1, 0.40);
 
