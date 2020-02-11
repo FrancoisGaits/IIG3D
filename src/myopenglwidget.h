@@ -24,7 +24,7 @@ public:
     // Demo management
     void activatedemo(unsigned int numdemo);
 
-    void switchFragmentShader(std::string shaderPath);
+    void switchFragmentShader(const std::string& shaderPath);
     
 public slots:
     void cleanup();
@@ -43,8 +43,10 @@ protected:
 
 private :
     std::string currentFs;
-    int currDemo;
-    
+    unsigned currDemo;
+    int precisionFactor;
+    bool drawfill;
+
     std::unique_ptr<OpenGLDemo> _openglDemo;
 
     using DemoConstructors=std::function<OpenGLDemo*(int, int)>;

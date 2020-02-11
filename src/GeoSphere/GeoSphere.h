@@ -15,7 +15,7 @@
  */
 class GeoSphere : public OpenGLDemo {
 public:
-  explicit GeoSphere(int width, int height, std::string fsPath);
+    explicit GeoSphere(int width, int height, const std::string& fsPath, int precision, bool drawfill = true);
 
     void resize(int width, int height) override;
 
@@ -43,7 +43,7 @@ private:
     Shader shader;
 
     // for mouse management
-    int _button; // 0 --> left. 1 --> right. 2 --> middle. 3 --> other
+    int _button{}; // 0 --> left. 1 --> right. 2 --> middle. 3 --> other
     float _mousex{0};
     float _mousey{0};
 

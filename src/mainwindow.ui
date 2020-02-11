@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>変人 Engine</string>
+   <string>Henjin</string>
   </property>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -54,7 +54,6 @@
    <addaction name="menuShader"/>
    <addaction name="menuInfo"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="action_Version_OpenGL">
    <property name="text">
     <string>&amp;Version OpenGL</string>

@@ -15,7 +15,7 @@
  */
 class UVSphere : public OpenGLDemo {
 public:
-  explicit UVSphere(int width, int height, std::string fsPath);
+  explicit UVSphere(int width, int height, const std::string& fsPath, int precision, bool drawfill=true);
 
     void resize(int width, int height) override;
 

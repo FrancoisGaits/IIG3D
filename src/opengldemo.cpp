@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-OpenGLDemo::OpenGLDemo(int width, int height) : _width(width), _height(height), _drawfill(true) {
+OpenGLDemo::OpenGLDemo(int width, int height, bool drawfill) : _width(width), _height(height), _drawfill(drawfill) {
     glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, width, height);
 }

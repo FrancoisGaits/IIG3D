@@ -11,7 +11,7 @@
 class OpenGLDemo {
 
 public:
-    explicit OpenGLDemo(int width, int height);
+    explicit OpenGLDemo(int width, int height, bool drawfill=true);
     virtual ~OpenGLDemo();
 
     virtual void resize(int width, int height);

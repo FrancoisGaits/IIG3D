@@ -12,11 +12,11 @@
 
 #define deg2rad(x) float(M_PI)*(x)/180.f
 
-UVSphere::UVSphere(int width, int height, std::string fsPath) : OpenGLDemo(width, height),
+UVSphere::UVSphere(int width, int height, const std::string& fsPath, int precision, bool drawfill) : OpenGLDemo(width, height, drawfill),
 								shader("../src/shaders/shader.vs", fsPath.data()),
 								_activecamera(1), _camera(nullptr) {
 
-    generateUVSphereAttributes(50, 50, 0.35);
+    generateUVSphereAttributes(3*precision, 3*precision, 0.35);
 
     mesh.load();
 
@@ -84,7 +84,7 @@ void UVSphere::generateUVSphereAttributes(unsigned nbParallels, unsigned nbMerid
     float theta = M_PI / 2;
     float phi = 0;
     float pasTheta = M_PI / (nbParallels - 1);
-    float pasPhi = 2.f * M_PI / (nbMeridians);
+    float pasPhi = 2 * M_PI / (nbMeridians);
 
     unsigned nbPoints((nbParallels - 2) * nbMeridians + 2);
 

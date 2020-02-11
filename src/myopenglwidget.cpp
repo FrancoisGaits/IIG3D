@@ -11,25 +11,26 @@
 #include "UVSphere/UVSphere.h"
 
 MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent)/*, QOpenGLFunctions_4_1_Core()*/,
-                                                  _openglDemo(nullptr), _lastime(0) {
+                                                  currentFs("../src/shaders/shaderLambert.fs"),
+                                                  precisionFactor(1), drawfill(true),
+                                                  _openglDemo(nullptr), _lastime(0){
 
-    currentFs = "../src/shaders/shaderLambert.fs";
     // add all demo constructors here
-    _democonstructors.push_back([](int width, int height) -> OpenGLDemo * {
+    _democonstructors.emplace_back([](int width, int height) -> OpenGLDemo * {
         std::cout << "Clear" << std::endl;
         return new OpenGLDemo(width, height);
     });
-    _democonstructors.push_back([this](int width, int height) -> OpenGLDemo * {
+    _democonstructors.emplace_back([this](int width, int height) -> OpenGLDemo * {
         std::cout << "Displaying UV Sphere" << std::endl;
-        return new UVSphere(width, height, currentFs);
+        return new UVSphere(width, height, currentFs, precisionFactor, drawfill);
     });
-    _democonstructors.push_back([this](int width, int height) -> OpenGLDemo * {
+    _democonstructors.emplace_back([this](int width, int height) -> OpenGLDemo * {
         std::cout << "Displaying Geo Sphere" << std::endl;
-        return new GeoSphere(width, height, currentFs);
+        return new GeoSphere(width, height, currentFs, precisionFactor, drawfill);
     });
 }
 
-void MyOpenGLWidget::switchFragmentShader(std::string shaderPath) {
+void MyOpenGLWidget::switchFragmentShader(const std::string& shaderPath) {
     currentFs = shaderPath;
     resetScene();
 }
@@ -126,9 +127,29 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
             // Wireframe key
         case Qt::Key_W:
             _openglDemo->toggledrawmode();
+            drawfill = !drawfill;
             update();
             break;
-            // Other keys are transmitted to the scene
+        case Qt::Key_C: {
+            if (precisionFactor > 1) {
+                --precisionFactor;
+                resetScene();
+            } else {
+                precisionFactor = 1;
+            }
+        }
+            break;
+        case Qt::Key_V:{
+            if (precisionFactor < 400) {
+                ++precisionFactor;
+                resetScene();
+            } else {
+                precisionFactor = 400;
+            }
+        }
+            break;
+
+        // Other keys are transmitted to the scene
         default :
             if (_openglDemo->keyboard(event->text().toStdString()[0]))
                 update();
