@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     openglWidget->setFocus();
 
     setCentralWidget(openglWidget);
+
 }
 
 MainWindow::~MainWindow() {
@@ -40,19 +41,16 @@ void MainWindow::on_action_Version_OpenGL_triggered() {
     QMessageBox::information(this, "OpenGL Information", message.str().c_str());
 }
 
-void MainWindow::on_actionHello_clear_triggered() {
+void MainWindow::on_actionClear_triggered() {
     openglWidget->activatedemo(0);
 }
 
-void MainWindow::on_actionHello_triangle_triggered() {
+
+void MainWindow::on_actionUV_Sphere_triggered() {
     openglWidget->activatedemo(1);
 }
 
-void MainWindow::on_actionHello_camera_triggered() {
+void MainWindow::on_actionGeo_Sphere_triggered() {
     openglWidget->activatedemo(2);
-}
-
-void MainWindow::on_actionHello_spheres_triggered() {
-    openglWidget->activatedemo(3);
 }
 

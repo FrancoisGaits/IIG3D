@@ -65,7 +65,7 @@ add_executable(${PROJECT_NAME}
                ${folder_source}
                ${folder_header}
                ${folder_ui}
-               )
+        )
 
 set(EXT_LIBS Qt5::OpenGL ${OPENGL_LIBRARIES})
 

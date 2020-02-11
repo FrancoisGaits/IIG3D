@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Hello OpenGL ...</string>
+   <string>Jeu de mot Engine</string>
   </property>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -25,7 +25,7 @@
      <x>0</x>
      <y>0</y>
      <width>512</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuInfo">
@@ -38,21 +38,12 @@
     <property name="title">
      <string>&amp;Demo</string>
     </property>
-    <addaction name="actionHello_clear"/>
-    <addaction name="actionHello_triangle"/>
-    <addaction name="actionHello_camera"/>
-    <addaction name="actionHello_spheres"/>
+    <addaction name="actionClear"/>
+    <addaction name="actionUV_Sphere"/>
+    <addaction name="actionGeo_Sphere"/>
    </widget>
    <addaction name="menu_Demo"/>
    <addaction name="menuInfo"/>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_Version_OpenGL">
@@ -60,24 +51,28 @@
     <string>&amp;Version OpenGL</string>
    </property>
   </action>
-  <action name="actionHello_triangle">
+  <action name="actionUV_Sphere">
    <property name="text">
-    <string>Hello triangle ...</string>
+    <string>UV Sphere</string>
+   </property>
+   <property name="toolTip">
+    <string>display UV Sphere</string>
    </property>
   </action>
-  <action name="actionHello_camera">
+  <action name="actionClear">
    <property name="text">
-    <string>Hello camera ...</string>
+    <string>Clear</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear scene</string>
    </property>
   </action>
-  <action name="actionHello_spheres">
+  <action name="actionGeo_Sphere">
    <property name="text">
-    <string>Hello spheres ...</string>
+    <string>Geo Sphere</string>
    </property>
-  </action>
-  <action name="actionHello_clear">
-   <property name="text">
-    <string>Hello clear ...</string>
+   <property name="toolTip">
+    <string>Display Geo Sphere</string>
    </property>
   </action>
  </widget>
