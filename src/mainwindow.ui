@@ -36,7 +36,7 @@
    </widget>
    <widget class="QMenu" name="menu_Demo">
     <property name="title">
-     <string>&amp;Demo</string>
+     <string>Scenes</string>
     </property>
     <addaction name="actionClear"/>
     <addaction name="actionUV_Sphere"/>
