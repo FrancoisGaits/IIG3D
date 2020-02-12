@@ -5,7 +5,7 @@
 
 #include "camera/camera.h"
 #include "shaders.h"
-#include "Mesh.h"
+#include "mesh.h"
 
 #include <memory>
 #include <functional>
@@ -15,7 +15,7 @@
  */
 class UVSphere : public OpenGLDemo {
 public:
-  explicit UVSphere(int width, int height, const std::string& fsPath, int precision, bool drawfill=true);
+  explicit UVSphere(int width, int height, FragmentShader fs, int precision, bool drawfill=true);
 
     void resize(int width, int height) override;
 
@@ -33,11 +33,14 @@ public:
 
 private:
 
+    float _radius;
+    int _precision;
+    FragmentShader _fs;
+
     void generateUVSphereAttributes(unsigned nbParrallels, unsigned nbMeridians, float radius);
 
     // A simple geometry
     Mesh mesh;
-
 
     //Shaders
     Shader shader;

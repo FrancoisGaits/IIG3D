@@ -12,16 +12,23 @@
 
 #define deg2rad(x) float(M_PI)*(x)/180.f
 
-UVSphere::UVSphere(int width, int height, const std::string& fsPath, int precision, bool drawfill) : OpenGLDemo(width, height, drawfill),
-								shader("../src/shaders/shader.vs", fsPath.data()),
-								_activecamera(1), _camera(nullptr) {
+UVSphere::UVSphere(int width, int height, FragmentShader fs, int precision, bool drawfill) : OpenGLDemo(width, height,
+                                                                                                        drawfill),
+                                                                                             _radius(0.4f),
+                                                                                             _precision(precision),
+                                                                                             _fs(fs),
+                                                                                             shader("../src/shaders/shader.vs",
+                                                                                                    Shader::getShaderPath(
+                                                                                                            fs).data()),
+                                                                                             _activecamera(1),
+                                                                                             _camera(nullptr) {
 
-    generateUVSphereAttributes(3+precision, 3+precision, 0.35);
+    generateUVSphereAttributes(3 + _precision, 3 + _precision, _radius);
 
     mesh.load();
 
-    _cameraselector.push_back([]() -> Camera * { return new EulerCamera(glm::vec3(0.f, 0.f, 1.f)); });
-    _cameraselector.push_back([]() -> Camera * {
+    _cameraselector.emplace_back([]() -> Camera * { return new EulerCamera(glm::vec3(0.f, 0.f, 1.f)); });
+    _cameraselector.emplace_back([]() -> Camera * {
         return new TrackballCamera(glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f));
     });
 
@@ -45,6 +52,11 @@ void UVSphere::draw() {
     shader.use();
 
     _view = _camera->viewmatrix();
+
+    if (_fs == ERREUR) {
+        shader.setInt("prec", _precision);
+        shader.setFloat("radius", _radius);
+    }
 
     shader.setMat4fv("model", _model);
     shader.setMat4fv("view", _view);
@@ -102,7 +114,7 @@ void UVSphere::generateUVSphereAttributes(unsigned nbParallels, unsigned nbMerid
                                sinf(theta) * radius,
                                cosf(theta) * sinf(phi) * radius);
 
-                phi += pasPhi;
+                phi -= pasPhi;
             }
         }
 
@@ -127,9 +139,10 @@ void UVSphere::generateUVSphereAttributes(unsigned nbParallels, unsigned nbMerid
                 unsigned b = (meri == nbMeridians ? 1 : meri + 1) + dec;                            // |    \       |
                 unsigned c = meri + nbMeridians + dec;                                              // |       \    |
                 unsigned d = (meri == nbMeridians ? nbMeridians + 1 : meri + nbMeridians + 1) + dec;// |          \ |
-                                                                                                    // d------------c
+                // d------------c
                 mesh.addQuad(a, b, c, d);
             }
         }
     }
+    std::cout << "\ttriangles : " << mesh.nbTriangles() << std::endl;
 }

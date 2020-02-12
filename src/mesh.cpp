@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "mesh.h"
 
 void Mesh::addQuad(unsigned a, unsigned b, unsigned c, unsigned d) {
     //triangle inferieur

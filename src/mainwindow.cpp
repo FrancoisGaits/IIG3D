@@ -42,15 +42,15 @@ void MainWindow::on_action_Version_OpenGL_triggered() {
 }
 
 void MainWindow::on_action_shaderLambert_triggered() {
-  openglWidget->switchFragmentShader("../src/shaders/shaderLambert.fs");
+  openglWidget->switchFragmentShader(LAMBERT);
 }
 
 void MainWindow::on_action_shaderFacette_triggered() {
-  openglWidget->switchFragmentShader("../src/shaders/shaderFacette.fs");
+  openglWidget->switchFragmentShader(FACETTE);
 }
 
 void MainWindow::on_action_shaderErreur_triggered() {
-  openglWidget->switchFragmentShader("../src/shaders/shaderErreur.fs");
+  openglWidget->switchFragmentShader(ERREUR);
 }
 
 void MainWindow::on_actionClear_triggered() {

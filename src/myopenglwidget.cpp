@@ -7,11 +7,9 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "GeoSphere/GeoSphere.h"
-#include "UVSphere/UVSphere.h"
 
 MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent)/*, QOpenGLFunctions_4_1_Core()*/,
-                                                  currentFs("../src/shaders/shaderLambert.fs"),
+                                                  currentFs(FACETTE),
                                                   precisionFactor(1), drawfill(true),
                                                   _openglDemo(nullptr), _lastime(0){
 
@@ -21,17 +19,17 @@ MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent)/*, QOpen
         return new OpenGLDemo(width, height);
     });
     _democonstructors.emplace_back([this](int width, int height) -> OpenGLDemo * {
-        std::cout << "Displaying UV Sphere" << std::endl;
+        std::cout << "UV Sphere : \n\tprecision : " << precisionFactor << std::endl;
         return new UVSphere(width, height, currentFs, precisionFactor, drawfill);
     });
     _democonstructors.emplace_back([this](int width, int height) -> OpenGLDemo * {
-        std::cout << "Displaying Geo Sphere" << std::endl;
+        std::cout << "Geo Sphere : \n\tprecision : " << precisionFactor << std::endl;
         return new GeoSphere(width, height, currentFs, precisionFactor, drawfill);
     });
 }
 
-void MyOpenGLWidget::switchFragmentShader(const std::string& shaderPath) {
-    currentFs = shaderPath;
+void MyOpenGLWidget::switchFragmentShader(FragmentShader fs) {
+    currentFs = fs;
     resetScene();
 }
 
@@ -164,7 +162,6 @@ void MyOpenGLWidget::resetScene() {
 void MyOpenGLWidget::activatedemo(unsigned int numdemo) {
     if (numdemo < _democonstructors.size()) {
 	currDemo = numdemo;
-        std::cout << "Performing (" << numdemo << ") : ";
         makeCurrent();
         _openglDemo.reset(_democonstructors[numdemo](width(), height()));
         doneCurrent();

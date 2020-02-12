@@ -8,7 +8,9 @@
 #include <memory>
 
 #include "opengldemo.h"
-
+#include "GeoSphere/GeoSphere.h"
+#include "UVSphere/UVSphere.h"
+#include "shaders.h"
 
 class MyOpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_4_1_Core {
 
@@ -24,7 +26,7 @@ public:
     // Demo management
     void activatedemo(unsigned int numdemo);
 
-    void switchFragmentShader(const std::string& shaderPath);
+    void switchFragmentShader(FragmentShader fs);
     
 public slots:
     void cleanup();
@@ -42,7 +44,7 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
 private :
-    std::string currentFs;
+    FragmentShader currentFs;
     unsigned currDemo;
     int precisionFactor;
     bool drawfill;

@@ -5,7 +5,7 @@
 
 #include "camera/camera.h"
 #include "shaders.h"
-#include "Mesh.h"
+#include "mesh.h"
 
 #include <memory>
 #include <functional>
@@ -18,7 +18,7 @@
  */
 class GeoSphere : public OpenGLDemo {
 public:
-    explicit GeoSphere(int width, int height, const std::string& fsPath, int precision, bool drawfill = true);
+    explicit GeoSphere(int width, int height, FragmentShader fs, int precision, bool drawfill = true);
 
     void resize(int width, int height) override;
 
@@ -35,11 +35,18 @@ public:
     ~GeoSphere() override = default;
 
 private:
-    int divideEdge(int a, int b, float radius, glm::vec3& v1, glm::vec3& v2, Mesh& tmpMesh);
+    unsigned divideEdge(unsigned a, unsigned b, float radius, glm::vec3& v1, glm::vec3& v2, Mesh& tmpMesh);
 
     void generateGeoSphereAttributes(unsigned nbDiv, float radius);
 
-    std::map<std::pair<int,int>,int> cache;
+    std::map<std::pair<unsigned,unsigned>,unsigned> cache;
+
+    const float c1 = 1.f/sqrtf(1 + 1.61803398875f*1.61803398875f);
+    const float c2 = 1.61803398875f*c1;
+
+    float _radius;
+    int _precision;
+    FragmentShader _fs;
 
     // A simple geometry
     Mesh mesh;

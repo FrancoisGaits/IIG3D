@@ -11,19 +11,27 @@
 
 
 #define deg2rad(x) float(M_PI)*(x)/180.f
-#define gr 1.61803398875f
 
-GeoSphere::GeoSphere(int width, int height, const std::string& fsPath, int precision, bool drawfill) : OpenGLDemo(width, height, drawfill),
-								  shader("../src/shaders/shader.vs", fsPath.data()),
-								  _activecamera(1), _camera(nullptr) {
+GeoSphere::GeoSphere(int width, int height, FragmentShader fs, int precision, bool drawfill) : OpenGLDemo(width, height,
+                                                                                                          drawfill),
+                                                                                               _radius(0.4),
+                                                                                               _precision(precision),
+                                                                                               _fs(fs),
+                                                                                               shader("../src/shaders/shader.vs",
+                                                                                                      Shader::getShaderPath(
+                                                                                                              fs).data()),
+                                                                                               _activecamera(1),
+                                                                                               _camera(nullptr) {
 
-    generateGeoSphereAttributes(precision-1, 0.40);
+    if (_precision > 8)
+        _precision = 8;
+    generateGeoSphereAttributes(_precision - 1, 0.40);
 
 
     mesh.load();
 
-    _cameraselector.push_back([]() -> Camera * { return new EulerCamera(glm::vec3(0.f, 0.f, 1.f)); });
-    _cameraselector.push_back([]() -> Camera * {
+    _cameraselector.emplace_back([]() -> Camera * { return new EulerCamera(glm::vec3(0.f, 0.f, 1.f)); });
+    _cameraselector.emplace_back([]() -> Camera * {
         return new TrackballCamera(glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f));
     });
 
@@ -47,6 +55,11 @@ void GeoSphere::draw() {
     shader.use();
 
     _view = _camera->viewmatrix();
+
+    if (_fs == ERREUR) {
+        shader.setInt("prec", _precision);
+        shader.setFloat("radius", _radius);
+    }
 
     shader.setMat4fv("model", _model);
     shader.setMat4fv("view", _view);
@@ -82,23 +95,19 @@ bool GeoSphere::keyboard(unsigned char k) {
     }
 }
 
-int GeoSphere::divideEdge(int a, int b, float radius, glm::vec3& v1, glm::vec3& v2, Mesh& tmpMesh) {
-    if(a < b) {
-        std::swap(a,b);
+unsigned GeoSphere::divideEdge(unsigned a, unsigned b, float radius, glm::vec3 &v1, glm::vec3 &v2, Mesh &tmpMesh) {
+    if (a < b) {
+        std::swap(a, b);
     }
-    auto edge = std::pair<int,int>(a,b);
+    auto edge = std::pair<unsigned, unsigned>(a, b);
     auto it = cache.find(edge);
-    if(it != cache.end()) {
+    if (it != cache.end()) {
         return it->second;
     }
 
-    glm::vec3 v = glm::normalize((v1+v2)/2.f)*radius;
+    glm::vec3 v = glm::normalize((v1 + v2) / 2.f) * radius;
 
-    if(glm::length(v) != radius) {
-	std::cout << glm::length(v) << std::endl;
-    }
-
-    int ret = tmpMesh.nbVertices();
+    unsigned ret = tmpMesh.nbVertices();
     tmpMesh.addVertex(v);
     cache.emplace(edge, ret);
 
@@ -110,21 +119,21 @@ void GeoSphere::generateGeoSphereAttributes(unsigned nbDiv, float radius) {
     mesh.clear();
 
     mesh.vertices = {
-            radius / 2.f, radius * gr / 2.f, 0,
-            radius * gr / 2.f, 0, radius / 2.f,
-            0, radius / 2.f, radius * gr / 2.f,
+            c1 * radius, c2 * radius, 0,
+            c2 * radius, 0, c1 * radius,
+            0, c1 * radius, c2 * radius,
 
-            -radius / 2.f, radius * gr / 2.f, 0,
-            0, radius / 2.f, -radius * gr / 2.f,
-            radius * gr / 2.f, 0, -radius / 2.f,
+            -c1 * radius, c2 * radius, 0,
+            0, c1 * radius, -c2 * radius,
+            c2 * radius, 0, -c1 * radius,
 
-            radius / 2.f, -radius * gr / 2.f, 0,
-            0, -radius / 2.f, radius * gr / 2.f,
-            -radius * gr / 2.f, 0, radius / 2.f,
+            c1 * radius, -c2 * radius, 0,
+            0, -c1 * radius, c2 * radius,
+            -c2 * radius, 0, c1 * radius,
 
-            -radius * gr / 2.f, 0, -radius / 2.f,
-            0, -radius / 2.f, -radius * gr / 2.f,
-            -radius / 2.f, -radius * gr / 2.f, 0
+            -c2 * radius, 0, -c1 * radius,
+            0, -c1 * radius, -c2 * radius,
+            -c1 * radius, -c2 * radius, 0
     };
 
     mesh.normals = mesh.vertices;
@@ -155,22 +164,22 @@ void GeoSphere::generateGeoSphereAttributes(unsigned nbDiv, float radius) {
             6, 5, 1
     };
 
-    for(unsigned div = 0; div<nbDiv; ++div) {
+    for (unsigned div = 0; div < nbDiv; ++div) {
         Mesh tmpMesh;
         tmpMesh.vertices = mesh.vertices;
         cache.clear();
-        for(unsigned i = 0; i < mesh.indices.size(); i+=3) {
-            int a = mesh.indices[i];        //   a
-            int b = mesh.indices[i+1];      //  / \ ~
-            int c = mesh.indices[i+2];      // b---c
+        for (unsigned i = 0; i < mesh.indices.size(); i += 3) {
+            unsigned a = mesh.indices[i];        //   a
+            unsigned b = mesh.indices[i + 1];      //  / \ ~
+            unsigned c = mesh.indices[i + 2];      // b---c
 
-            glm::vec3 v0 = glm::vec3(mesh.vertices[a*3], mesh.vertices[a*3+1], mesh.vertices[a*3+2]);
-            glm::vec3 v1 = glm::vec3(mesh.vertices[b*3], mesh.vertices[b*3+1], mesh.vertices[b*3+2]);
-            glm::vec3 v2 = glm::vec3(mesh.vertices[c*3], mesh.vertices[c*3+1], mesh.vertices[c*3+2]);
+            glm::vec3 v0 = glm::vec3(mesh.vertices[a * 3], mesh.vertices[a * 3 + 1], mesh.vertices[a * 3 + 2]);
+            glm::vec3 v1 = glm::vec3(mesh.vertices[b * 3], mesh.vertices[b * 3 + 1], mesh.vertices[b * 3 + 2]);
+            glm::vec3 v2 = glm::vec3(mesh.vertices[c * 3], mesh.vertices[c * 3 + 1], mesh.vertices[c * 3 + 2]);
 
-            int d = divideEdge(a, b, radius, v0, v1, tmpMesh);
-            int e = divideEdge(b, c, radius, v1, v2, tmpMesh);
-            int f = divideEdge(c, a, radius, v2, v0, tmpMesh);
+            unsigned d = divideEdge(a, b, radius, v0, v1, tmpMesh);
+            unsigned e = divideEdge(b, c, radius, v1, v2, tmpMesh);
+            unsigned f = divideEdge(c, a, radius, v2, v0, tmpMesh);
 
             //std::cout << d << " " << e << " " << f << std::endl;
 
@@ -182,5 +191,5 @@ void GeoSphere::generateGeoSphereAttributes(unsigned nbDiv, float radius) {
         tmpMesh.normals = tmpMesh.vertices;
         mesh = tmpMesh;
     }
-
+    std::cout << "\ttriangles : " << mesh.nbTriangles() << std::endl;
 }
