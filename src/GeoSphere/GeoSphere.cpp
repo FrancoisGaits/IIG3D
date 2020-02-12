@@ -94,7 +94,11 @@ int GeoSphere::divideEdge(int a, int b, float radius, glm::vec3& v1, glm::vec3& 
 
     glm::vec3 v = glm::normalize((v1+v2)/2.f)*radius;
 
-    int ret = tmpMesh.vertices.size()/3;
+    if(glm::length(v) != radius) {
+	std::cout << glm::length(v) << std::endl;
+    }
+
+    int ret = tmpMesh.nbVertices();
     tmpMesh.addVertex(v);
     cache.emplace(edge, ret);
 
