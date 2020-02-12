@@ -17,7 +17,7 @@ GeoSphere::GeoSphere(int width, int height, const std::string& fsPath, int preci
 								  shader("../src/shaders/shader.vs", fsPath.data()),
 								  _activecamera(1), _camera(nullptr) {
 
-    generateGeoSphereAttributes(precision, 0.40);
+    generateGeoSphereAttributes(precision-1, 0.40);
 
 
     mesh.load();
@@ -82,28 +82,45 @@ bool GeoSphere::keyboard(unsigned char k) {
     }
 }
 
+int GeoSphere::divideEdge(int a, int b, float radius, glm::vec3& v1, glm::vec3& v2, Mesh& tmpMesh) {
+    if(a < b) {
+        std::swap(a,b);
+    }
+    auto edge = std::pair<int,int>(a,b);
+    auto it = cache.find(edge);
+    if(it != cache.end()) {
+        return it->second;
+    }
+
+    glm::vec3 v = glm::normalize((v1+v2)/2.f)*radius;
+
+    int ret = tmpMesh.vertices.size()/3;
+    tmpMesh.addVertex(v);
+    cache.emplace(edge, ret);
+
+    return ret;
+}
+
 //https://github.com/caosdoar/spheres/blob/master/src/spheres.cpp
 void GeoSphere::generateGeoSphereAttributes(unsigned nbDiv, float radius) {
-    float a = radius;
-
     mesh.clear();
 
     mesh.vertices = {
-            a / 2.f, a * gr / 2.f, 0,
-            a * gr / 2.f, 0, a / 2.f,
-            0, a / 2.f, a * gr / 2.f,
+            radius / 2.f, radius * gr / 2.f, 0,
+            radius * gr / 2.f, 0, radius / 2.f,
+            0, radius / 2.f, radius * gr / 2.f,
 
-            -a / 2.f, a * gr / 2.f, 0,
-            0, a / 2.f, -a * gr / 2.f,
-            a * gr / 2.f, 0, -a / 2.f,
+            -radius / 2.f, radius * gr / 2.f, 0,
+            0, radius / 2.f, -radius * gr / 2.f,
+            radius * gr / 2.f, 0, -radius / 2.f,
 
-            a / 2.f, -a * gr / 2.f, 0,
-            0, -a / 2.f, a * gr / 2.f,
-            -a * gr / 2.f, 0, a / 2.f,
+            radius / 2.f, -radius * gr / 2.f, 0,
+            0, -radius / 2.f, radius * gr / 2.f,
+            -radius * gr / 2.f, 0, radius / 2.f,
 
-            -a * gr / 2.f, 0, -a / 2.f,
-            0, -a / 2.f, -a * gr / 2.f,
-            -a / 2.f, -a * gr / 2.f, 0
+            -radius * gr / 2.f, 0, -radius / 2.f,
+            0, -radius / 2.f, -radius * gr / 2.f,
+            -radius / 2.f, -radius * gr / 2.f, 0
     };
 
     mesh.normals = mesh.vertices;
@@ -134,14 +151,32 @@ void GeoSphere::generateGeoSphereAttributes(unsigned nbDiv, float radius) {
             6, 5, 1
     };
 
+    for(unsigned div = 0; div<nbDiv; ++div) {
+        Mesh tmpMesh;
+        tmpMesh.vertices = mesh.vertices;
+        cache.clear();
+        for(unsigned i = 0; i < mesh.indices.size(); i+=3) {
+            int a = mesh.indices[i];        //   a
+            int b = mesh.indices[i+1];      //  / \ ~
+            int c = mesh.indices[i+2];      // b---c
 
-    /* int o = 0;
-     for(double i : mesh.vertices) {
-         if(o++%3==0) {
-             std::cout << "]" << std::endl << "[";
-         }
-         std::cout << i << (o%3 ? ",":"");
-     }
-     std::cout << std::endl;
- */
+            glm::vec3 v0 = glm::vec3(mesh.vertices[a*3], mesh.vertices[a*3+1], mesh.vertices[a*3+2]);
+            glm::vec3 v1 = glm::vec3(mesh.vertices[b*3], mesh.vertices[b*3+1], mesh.vertices[b*3+2]);
+            glm::vec3 v2 = glm::vec3(mesh.vertices[c*3], mesh.vertices[c*3+1], mesh.vertices[c*3+2]);
+
+            int d = divideEdge(a, b, radius, v0, v1, tmpMesh);
+            int e = divideEdge(b, c, radius, v1, v2, tmpMesh);
+            int f = divideEdge(c, a, radius, v2, v0, tmpMesh);
+
+            //std::cout << d << " " << e << " " << f << std::endl;
+
+            tmpMesh.addTri(a, d, f);
+            tmpMesh.addTri(d, b, e);
+            tmpMesh.addTri(e, c, f);
+            tmpMesh.addTri(d, e, f);
+        }
+        tmpMesh.normals = tmpMesh.vertices;
+        mesh = tmpMesh;
+    }
+
 }

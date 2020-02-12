@@ -16,7 +16,7 @@ UVSphere::UVSphere(int width, int height, const std::string& fsPath, int precisi
 								shader("../src/shaders/shader.vs", fsPath.data()),
 								_activecamera(1), _camera(nullptr) {
 
-    generateUVSphereAttributes(3*precision, 3*precision, 0.35);
+    generateUVSphereAttributes(3+precision, 3+precision, 0.35);
 
     mesh.load();
 

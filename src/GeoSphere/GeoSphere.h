@@ -9,6 +9,9 @@
 
 #include <memory>
 #include <functional>
+#include <map>
+#include <utility>
+
 
 
 /** Simple drawing demonstration
@@ -32,12 +35,14 @@ public:
     ~GeoSphere() override = default;
 
 private:
+    int divideEdge(int a, int b, float radius, glm::vec3& v1, glm::vec3& v2, Mesh& tmpMesh);
 
     void generateGeoSphereAttributes(unsigned nbDiv, float radius);
 
+    std::map<std::pair<int,int>,int> cache;
+
     // A simple geometry
     Mesh mesh;
-
 
     //Shaders
     Shader shader;

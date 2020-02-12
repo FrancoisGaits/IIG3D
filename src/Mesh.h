@@ -9,6 +9,7 @@
 
 #include <GL/gl.h>
 #include <GL/glext.h>
+#include "glm/glm.hpp"
 
 #endif
 
@@ -33,6 +34,8 @@ public:
     void addTri(unsigned a, unsigned b, unsigned c);
 
     void addVertex(float x, float y, float z);
+
+    void addVertex(glm::vec3& v);
 
     void addNormal(float x, float y, float z);
 

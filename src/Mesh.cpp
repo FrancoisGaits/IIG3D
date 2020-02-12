@@ -23,6 +23,12 @@ void Mesh::addVertex(float x, float y, float z) {
     vertices.emplace_back(z);
 }
 
+void Mesh::addVertex(glm::vec3 &v) {
+    vertices.emplace_back(v[0]);
+    vertices.emplace_back(v[1]);
+    vertices.emplace_back(v[2]);
+}
+
 void Mesh::addNormal(float x, float y, float z) {
     normals.emplace_back(x);
     normals.emplace_back(y);
