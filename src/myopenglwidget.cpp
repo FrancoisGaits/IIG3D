@@ -161,7 +161,7 @@ void MyOpenGLWidget::resetScene() {
 
 void MyOpenGLWidget::activatedemo(unsigned int numdemo) {
     if (numdemo < _democonstructors.size()) {
-	currDemo = numdemo;
+	    currDemo = numdemo;
         makeCurrent();
         _openglDemo.reset(_democonstructors[numdemo](width(), height()));
         doneCurrent();

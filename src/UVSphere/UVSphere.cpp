@@ -56,7 +56,11 @@ void UVSphere::draw() {
     if (_fs == ERREUR) {
         shader.setInt("prec", _precision);
         shader.setFloat("radius", _radius);
+    } else if (_fs == BLINNPHONG) {
+        shader.setVec3("cameraPos", _camera->position());
     }
+
+
 
     shader.setMat4fv("model", _model);
     shader.setMat4fv("view", _view);
@@ -93,32 +97,33 @@ bool UVSphere::keyboard(unsigned char k) {
 }
 
 void UVSphere::generateUVSphereAttributes(unsigned nbParallels, unsigned nbMeridians, float radius) {
-    float theta = M_PI / 2;
-    float phi = 0;
-    float pasTheta = M_PI / (nbParallels - 1);
-    float pasPhi = 2 * M_PI / (nbMeridians);
+    float phi = M_PI / 2;
+    float theta = 0;
+    float pasPhi = M_PI / (nbParallels - 1);
+    float pasTheta = -2 * M_PI / (nbMeridians);
 
     unsigned nbPoints((nbParallels - 2) * nbMeridians + 2);
 
     mesh.clear();
 
     for (unsigned para = 0; para < nbParallels; ++para) {
-        phi = 0;
+        theta = 0;
         if (para == 0 || para == nbParallels - 1) {
             mesh.addVertex(cosf(theta) * cosf(phi) * radius,
-                           sinf(theta) * radius,
-                           cosf(theta) * sinf(phi) * radius);
+                           sinf(phi) * radius,
+                           cosf(phi) * sinf(theta) * radius);
         } else {
             for (unsigned meri = 0; meri < nbMeridians; ++meri) {
                 mesh.addVertex(cosf(theta) * cosf(phi) * radius,
-                               sinf(theta) * radius,
-                               cosf(theta) * sinf(phi) * radius);
+                               sinf(phi) * radius,
+                               cosf(phi) * sinf(theta) * radius);
 
-                phi -= pasPhi;
+
+                theta += pasTheta;
             }
         }
 
-        theta += pasTheta;
+        phi += pasPhi;
     }
 
     mesh.normals = mesh.vertices;
@@ -139,7 +144,7 @@ void UVSphere::generateUVSphereAttributes(unsigned nbParallels, unsigned nbMerid
                 unsigned b = (meri == nbMeridians ? 1 : meri + 1) + dec;                            // |    \       |
                 unsigned c = meri + nbMeridians + dec;                                              // |       \    |
                 unsigned d = (meri == nbMeridians ? nbMeridians + 1 : meri + nbMeridians + 1) + dec;// |          \ |
-                // d------------c
+                                                                                                    // d------------c
                 mesh.addQuad(a, b, c, d);
             }
         }

@@ -41,6 +41,7 @@
     <addaction name="action_shaderLambert"/>
     <addaction name="action_shaderFacette"/>
     <addaction name="action_shaderErreur"/>
+    <addaction name="action_shaderBlinnPhong"/>
    </widget>
    <widget class="QMenu" name="menu_scenes">
     <property name="title">
@@ -105,6 +106,14 @@
    </property>
    <property name="toolTip">
     <string>Use error lightning</string>
+   </property>
+  </action>
+  <action name="action_shaderBlinnPhong">
+   <property name="text">
+    <string>Blinn-Phong</string>
+   </property>
+   <property name="toolTip">
+    <string>Use Blinn-Phong lightning</string>
    </property>
   </action>
  </widget>

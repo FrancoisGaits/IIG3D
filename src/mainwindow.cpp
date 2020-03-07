@@ -53,6 +53,10 @@ void MainWindow::on_action_shaderErreur_triggered() {
   openglWidget->switchFragmentShader(ERREUR);
 }
 
+void MainWindow::on_action_shaderBlinnPhong_triggered() {
+    openglWidget->switchFragmentShader(BLINNPHONG);
+}
+
 void MainWindow::on_actionClear_triggered() {
     openglWidget->activatedemo(0);
 }
