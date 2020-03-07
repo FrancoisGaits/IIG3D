@@ -7,9 +7,9 @@ out vec4 color;
 uniform vec3 cameraPos;
 vec3 lightPos = vec3(0.0, 10.0, 2.5);
 
-vec3 diffuseColor = vec3(1., 0.5, 0.2);
-vec3 specularColor = diffuseColor;
-float shininessFactor = 1.;
+vec3 specularColor= vec3(1, 1, 1);
+vec3  diffuseColor = vec3(1., 0., 0.);
+float shininessFactor = 0.5;
 float attenIntensity = 1;
 float ambientIntensity = 0.2;
 

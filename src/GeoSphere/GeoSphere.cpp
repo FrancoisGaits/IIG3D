@@ -57,7 +57,7 @@ void GeoSphere::draw() {
     _view = _camera->viewmatrix();
 
     if (_fs == ERREUR) {
-        shader.setInt("prec", _precision*_precision);
+        shader.setInt("prec", (_precision+1)*_precision);
         shader.setFloat("radius", _radius);
     } else if (_fs == BLINNPHONG) {
         shader.setVec3("cameraPos", _camera->position());

@@ -57,6 +57,7 @@ void UVSphere::draw() {
         shader.setInt("prec", _precision);
         shader.setFloat("radius", _radius);
     } else if (_fs == BLINNPHONG) {
+        std::cout << "camera : " << _camera->position().x << " " << _camera->position().y << " " << _camera->position().z << std::endl;
         shader.setVec3("cameraPos", _camera->position());
     }
 
@@ -108,15 +109,21 @@ void UVSphere::generateUVSphereAttributes(unsigned nbParallels, unsigned nbMerid
 
     for (unsigned para = 0; para < nbParallels; ++para) {
         theta = 0;
+        float cphr = cosf(phi) * radius;
+        float sphr = sinf(phi) * radius;
+
         if (para == 0 || para == nbParallels - 1) {
-            mesh.addVertex(cosf(theta) * cosf(phi) * radius,
-                           sinf(phi) * radius,
-                           cosf(phi) * sinf(theta) * radius);
+            mesh.addVertex(cosf(theta) * cphr,
+                           sphr,
+                           cphr * sinf(theta));
         } else {
+
             for (unsigned meri = 0; meri < nbMeridians; ++meri) {
-                mesh.addVertex(cosf(theta) * cosf(phi) * radius,
-                               sinf(phi) * radius,
-                               cosf(phi) * sinf(theta) * radius);
+                float sth = sinf(theta);
+                float cth = cosf(theta);
+                mesh.addVertex(cth * cphr,
+                               sphr,
+                               cphr * sth);
 
 
                 theta += pasTheta;

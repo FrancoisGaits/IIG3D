@@ -4,6 +4,7 @@
 
 OpenGLDemo::OpenGLDemo(int width, int height, bool drawfill) : _width(width), _height(height), _drawfill(drawfill) {
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
     glViewport(0, 0, width, height);
 }
 
@@ -16,7 +17,7 @@ void OpenGLDemo::resize(int width, int height) {
 }
 
 void OpenGLDemo::draw() {
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(0.05f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     if (_drawfill)

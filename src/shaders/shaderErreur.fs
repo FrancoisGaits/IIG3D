@@ -10,6 +10,6 @@ uniform float radius;
 
 void main(){
    float err = radius-length(fragPos);
-   err = err*8*prec;
-   color = normalize(vec4(err+0.2/2, 1-err*err*2, 0.2, 1.f))*1.5;
+   err = err*5*prec;
+   color = normalize(vec4(err+0.2/2, 1-err*err*2, 0.2, 1.f))*1.35;
 }
