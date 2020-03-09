@@ -28,14 +28,30 @@ enum FragmentShader {
     BLINNPHONG
 };
 
+enum VertexShader {
+    VERTEX
+};
+
 
 class Shader {
 private:
     unsigned int ID;
-public:
-    Shader(const char *vertexPath, const char *fragmentPath);
 
-    static std::string getShaderPath(FragmentShader fs);
+    VertexShader _vertexShader;
+    FragmentShader _fragmentShader;
+
+    std::string _basePath = "../src/shaders/";
+
+
+public:
+    Shader(VertexShader vs, FragmentShader fs);
+
+    std::string getFragmentShaderPath();
+
+    std::string getVertexShaderPath();
+
+    FragmentShader fragmentShader();
+    VertexShader vertexShader();
 
     void use();
 

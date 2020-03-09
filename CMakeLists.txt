@@ -1,4 +1,4 @@
-project(IIG3D-BaseTP)
+project(IIG3D)
 
 ############################################
 # Configure CMake and GCC flags
@@ -25,6 +25,7 @@ add_definitions(-DGL_SILENCE_DEPRECATION)
 # Define project private sources and headers
 #
 # the variable "folder_source" contains all .cpp files of this project
+
 FILE(GLOB_RECURSE
     folder_source
     ${CMAKE_SOURCE_DIR}/src/*.cpp

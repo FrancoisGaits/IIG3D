@@ -1,6 +1,9 @@
 #include "shaders.h"
 
-Shader::Shader(const char *vertexPath, const char *fragmentPath) {
+Shader::Shader(VertexShader vs, FragmentShader fs) : _vertexShader{vs}, _fragmentShader{fs} {
+    std::string vertexPath = getVertexShaderPath();
+    std::string fragmentPath = getFragmentShaderPath();
+
     std::string vertexCode;
     std::string fragmentCode;
     std::ifstream vShaderFile;
@@ -22,7 +25,7 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath) {
         vertexCode = vShaderStream.str();
         fragmentCode = fShaderStream.str();
     }
-    catch (std::ifstream::failure e) {
+    catch (std::ifstream::failure &e) {
         std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
     }
     const char *vShaderCode = vertexCode.c_str();
@@ -120,19 +123,35 @@ void Shader::setVec3(const std::string &name, glm::vec3 &value) const {
         std::cerr << "Unable to locate '" << name << "' Uniform in shader : " << ID << std::endl;
 }
 
+FragmentShader Shader::fragmentShader() {
+    return _fragmentShader;
+}
 
-std::string Shader::getShaderPath(FragmentShader fs) {
-    std::string basePath = "../src/shaders/";
-    switch(fs) {
+VertexShader Shader::vertexShader() {
+    return _vertexShader;
+}
+
+
+std::string Shader::getFragmentShaderPath() {
+    switch(_fragmentShader) {
         case LAMBERT :
-            return basePath + "shaderLambert.fs";
+            return _basePath + "shaderLambert.fs";
         case FACETTE :
-            return basePath + "shaderFacette.fs";
+            return _basePath + "shaderFacette.fs";
         case ERREUR :
-            return basePath + "shaderErreur.fs";
+            return _basePath + "shaderErreur.fs";
         case BLINNPHONG :
-            return basePath + "shaderBlinnPhong.fs";
+            return _basePath + "shaderBlinnPhong.fs";
         default:
-            return basePath;
+            return _basePath;
+    }
+}
+
+std::string Shader::getVertexShaderPath() {
+    switch(_vertexShader) {
+        case VERTEX :
+            return _basePath + "shader.vs";
+        default:
+            return _basePath;
     }
 }

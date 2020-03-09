@@ -7,9 +7,9 @@
 
 #include <memory>
 
-#include "opengldemo.h"
-#include "GeoSphere/GeoSphere.h"
-#include "UVSphere/UVSphere.h"
+#include "scene.h"
+#include "src/Sphere/GeoSphere.h"
+#include "src/Sphere/UVSphere.h"
 #include "shaders.h"
 
 class MyOpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_4_1_Core {
@@ -45,14 +45,14 @@ protected:
 
 private :
     FragmentShader currentFs;
-    unsigned currDemo;
+    unsigned currScene;
     int precisionFactor;
     bool drawfill;
 
-    std::unique_ptr<OpenGLDemo> _openglDemo;
+    std::unique_ptr<Scene> _scene;
 
-    using DemoConstructors=std::function<OpenGLDemo*(int, int)>;
-    std::vector<DemoConstructors> _democonstructors;
+    using SceneConstructors=std::function<Scene*(int, int)>;
+    std::vector<SceneConstructors> _sceneconstructors;
 
     void resetScene();
     

@@ -11,21 +11,25 @@
 MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent)/*, QOpenGLFunctions_4_1_Core()*/,
                                                   currentFs(FACETTE),
                                                   precisionFactor(1), drawfill(true),
-                                                  _openglDemo(nullptr), _lastime(0){
+                                                  _scene(nullptr), _lastime(0){
 
     // add all demo constructors here
-    _democonstructors.emplace_back([](int width, int height) -> OpenGLDemo * {
+    _sceneconstructors.emplace_back([](int width, int height) -> Scene * {
         std::cout << "Clear" << std::endl;
-        return new OpenGLDemo(width, height);
+        return new Scene(width, height);
     });
-    _democonstructors.emplace_back([this](int width, int height) -> OpenGLDemo * {
+
+    /*
+    _sceneconstructors.emplace_back([this](int width, int height) -> Scene * {
         std::cout << "UV Sphere : \n\tprecision : " << precisionFactor << std::endl;
         return new UVSphere(width, height, currentFs, precisionFactor, drawfill);
     });
-    _democonstructors.emplace_back([this](int width, int height) -> OpenGLDemo * {
+
+    _sceneconstructors.emplace_back([this](int width, int height) -> Scene * {
         std::cout << "Geo Sphere : \n\tprecision : " << precisionFactor << std::endl;
         return new GeoSphere(width, height, currentFs, precisionFactor, drawfill);
     });
+     */
 }
 
 void MyOpenGLWidget::switchFragmentShader(FragmentShader fs) {
@@ -46,13 +50,14 @@ QSize MyOpenGLWidget::sizeHint() const {
 }
 
 void MyOpenGLWidget::cleanup() {
-    _openglDemo.reset(nullptr);
+    _scene.reset(nullptr);
 }
 
 void MyOpenGLWidget::initializeGL() {
+    std::cout << "INITIALIZE" << std::endl;
     connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &MyOpenGLWidget::cleanup);
 
-    currDemo = 1;
+    currScene = 0;
     
     if (!initializeOpenGLFunctions()) {
         QMessageBox::critical(this, "OpenGL initialization error",
@@ -60,19 +65,20 @@ void MyOpenGLWidget::initializeGL() {
         exit(1);
     }
     // Initialize OpenGL and all OpenGL dependent stuff below
-    _openglDemo.reset(_democonstructors[currDemo](width(), height()));
+    _scene.reset(_sceneconstructors[currScene](width(), height()));
 }
 
 void MyOpenGLWidget::paintGL() {
+    std::cout << "PAINT" << std::endl;
     std::int64_t starttime = QDateTime::currentMSecsSinceEpoch();
-    _openglDemo->draw();
+    _scene->draw();
     glFinish();
     std::int64_t endtime = QDateTime::currentMSecsSinceEpoch();
     _lastime = endtime - starttime;
 }
 
 void MyOpenGLWidget::resizeGL(int width, int height) {
-    _openglDemo->resize(width, height);
+    _scene->resize(width, height);
 }
 
 void MyOpenGLWidget::mousePressEvent(QMouseEvent *event) {
@@ -90,12 +96,12 @@ void MyOpenGLWidget::mousePressEvent(QMouseEvent *event) {
         b = 2;
     else
         b = 3;
-    _openglDemo->mouseclick(b, event->x(), event->y());
+    _scene->mouseclick(b, event->x(), event->y());
     _lastime = QDateTime::currentMSecsSinceEpoch();
 }
 
 void MyOpenGLWidget::mouseMoveEvent(QMouseEvent *event) {
-    _openglDemo->mousemove(event->x(), event->y());
+    _scene->mousemove(event->x(), event->y());
     update();
 }
 
@@ -119,12 +125,12 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
         case Qt::Key_Up:
         case Qt::Key_Right:
         case Qt::Key_Down:
-            _openglDemo->keyboardmove(event->key() - Qt::Key_Left, 1. / 100/*double(_lastime)/10.*/);
+            _scene->keyboardmove(event->key() - Qt::Key_Left, 1. / 100/*double(_lastime)/10.*/);
             update();
             break;
             // Wireframe key
         case Qt::Key_W:
-            _openglDemo->toggledrawmode();
+            _scene->toggledrawmode();
             drawfill = !drawfill;
             update();
             break;
@@ -138,32 +144,33 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
         }
             break;
         case Qt::Key_V:{
-            if (precisionFactor < 400) {
+            if (precisionFactor < 30) {
                 ++precisionFactor;
                 resetScene();
             } else {
-                precisionFactor = 400;
+                precisionFactor = 30;
             }
         }
             break;
 
         // Other keys are transmitted to the scene
         default :
-            if (_openglDemo->keyboard(event->text().toStdString()[0]))
+            if (_scene->keyboard(event->text().toStdString()[0]))
                 update();
             break;
     }
 }
 
 void MyOpenGLWidget::resetScene() {
-    activatedemo(currDemo);
+    activatedemo(currScene);
 }
 
-void MyOpenGLWidget::activatedemo(unsigned int numdemo) {
-    if (numdemo < _democonstructors.size()) {
-	    currDemo = numdemo;
+void MyOpenGLWidget::activatedemo(unsigned int numScene) {
+    std::cout << "ACTIVATE " << numScene << std::endl;
+    if (numScene < _sceneconstructors.size()) {
+	    currScene = numScene;
         makeCurrent();
-        _openglDemo.reset(_democonstructors[numdemo](width(), height()));
+        _scene.reset(_sceneconstructors[numScene](width(), height()));
         doneCurrent();
         update();
     }
