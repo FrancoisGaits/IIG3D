@@ -2,7 +2,9 @@
 #define IIG3D_SPHERE_H
 
 #include "mesh.h"
+#include "glm/gtc/matrix_transform.hpp"
 
+#include <iostream>
 #include <memory>
 #include <functional>
 
@@ -15,18 +17,18 @@ public:
 
     void draw();
 
-    int precision();
-
+    unsigned precision();
     float radius();
-
     glm::mat4& model();
+
+    void translate(glm::vec3 vec);
 
     ~Sphere() = default;
 
 private:
 
     float _radius;
-    int _precision;
+    unsigned _precision;
 
     // matrices
     glm::mat4 _model;

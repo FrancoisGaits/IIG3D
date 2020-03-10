@@ -1,11 +1,11 @@
 #version 410 core
 
 in vec3 normal;
-in vec3 fragPos;
+in vec3 fragPosWorld;
 out vec4 color;
 
 uniform vec3 cameraPos;
-vec3 lightPos = vec3(0.0, 10.0, 2.5);
+vec3 lightPos = vec3(0.0, 0, 0);
 
 vec3 specularColor= vec3(1, 1, 1);
 vec3  diffuseColor = vec3(1., 0., 0.);
@@ -15,7 +15,7 @@ float ambientIntensity = 0.2;
 
 void main() {
 
-    vec3 lightDir = lightPos-fragPos;
+    vec3 lightDir = lightPos-fragPosWorld;
     //blinn term
     float cosAngIncidence = dot(normal, lightDir);
     vec3 viewDirection = normalize(-cameraPos);

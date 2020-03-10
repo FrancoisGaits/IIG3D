@@ -24,7 +24,7 @@ public:
     QSize sizeHint() const override;
 
     // Demo management
-    void activatedemo(unsigned int numdemo);
+    void activateScene(unsigned int numScene);
 
     void switchFragmentShader(FragmentShader fs);
     
@@ -37,24 +37,22 @@ protected:
     void paintGL() override;
     void resizeGL(int width, int height) override;
 
-    // Event maagement
+    // Event management
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
 
     void keyPressEvent(QKeyEvent *event) override;
 
 private :
-    FragmentShader currentFs;
     unsigned currScene;
-    int precisionFactor;
+    FragmentShader currFs;
+    unsigned currPrec;
     bool drawfill;
 
     std::unique_ptr<Scene> _scene;
 
     using SceneConstructors=std::function<Scene*(int, int)>;
     std::vector<SceneConstructors> _sceneconstructors;
-
-    void resetScene();
     
     // for event management
     std::int64_t _lastime;

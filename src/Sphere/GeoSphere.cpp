@@ -4,9 +4,9 @@
 
 
 
-GeoSphere::GeoSphere(float radius, unsigned precision) : Sphere(radius, precision) {
+GeoSphere::GeoSphere(float radius, unsigned precision) : Sphere(radius, precision*precision+1) {
 
-    mesh = generateSphereAttributes(radius, precision);
+    mesh = generateSphereAttributes(radius, precision-1);
 
     mesh.load();
 }
@@ -61,11 +61,11 @@ Mesh GeoSphere::generateSphereAttributes(float radius, unsigned precision) {
             0, 4, 3,
             0, 3, 2,
 
-            11, 6, 10,
-            11, 7, 6,
-            11, 8, 7,
-            11, 9, 8,
-            11, 10, 9,
+            11, 10, 6,
+            11, 6, 7,
+            11, 7, 8,
+            11, 8, 9,
+            11, 9, 10,
 
             1, 7, 6,
             5, 6, 10,
@@ -73,8 +73,8 @@ Mesh GeoSphere::generateSphereAttributes(float radius, unsigned precision) {
             3, 9, 8,
             2, 8, 7,
 
-            10, 5, 4,
-            9, 4, 3,
+            10, 4, 5,
+            9, 3, 4,
             8, 2, 3,
             7, 1, 2,
             6, 5, 1
@@ -96,8 +96,6 @@ Mesh GeoSphere::generateSphereAttributes(float radius, unsigned precision) {
             unsigned d = divideEdge(a, b, radius, v0, v1, tmpMesh);
             unsigned e = divideEdge(b, c, radius, v1, v2, tmpMesh);
             unsigned f = divideEdge(c, a, radius, v2, v0, tmpMesh);
-
-            //std::cout << d << " " << e << " " << f << std::endl;
 
             tmpMesh.addTri(a, d, f);
             tmpMesh.addTri(d, b, e);

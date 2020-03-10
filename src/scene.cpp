@@ -2,16 +2,15 @@
 #include <iostream>
 
 
-Scene::Scene(int width, int height, bool drawfill) : _width(width), _height(height), _drawfill(drawfill),
-                                                     _activecamera(1), shader(VERTEX, ERREUR) {
+Scene::Scene(int width, int height, bool drawfill, unsigned precision, FragmentShader fs, VertexShader vs) :
+                                                                    _width(width), _height(height), _drawfill(drawfill),
+                                                                    _activecamera(1), shader(vs, fs) {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
     glViewport(0, 0, width, height);
 
-    sphere.reset(new UVSphere(0.4,1));
-
-    std::cout << "SPHERE SET" << std::endl;
+    spheres.emplace_back(new GeoSphere(0.3,precision));
 
     _cameraselector.emplace_back([]() -> Camera * { return new EulerCamera(glm::vec3(0.f, 0.f, 1.f)); });
     _cameraselector.emplace_back([]() -> Camera * {
@@ -19,8 +18,6 @@ Scene::Scene(int width, int height, bool drawfill) : _width(width), _height(heig
     });
 
     _camera.reset(_cameraselector[_activecamera]());
-
-    std::cout << "CAMERA SET" << std::endl;
 
     _camera->setviewport(glm::vec4(0.f, 0.f, _width, _height));
     _view = _camera->viewmatrix();
@@ -48,23 +45,24 @@ void Scene::draw() {
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-
-    shader.use();
-
     _view = _camera->viewmatrix();
 
-    if (shader.fragmentShader() == ERREUR) {
-        shader.setInt("prec", sphere->precision());
-        shader.setFloat("radius", sphere->radius());
-    } else if (shader.fragmentShader() == BLINNPHONG) {
-        shader.setVec3("cameraPos", _camera->position());
+    for(const auto & sphere : spheres) {
+        shader.use();
+
+        if (shader.fragmentShader() == ERREUR) {
+            shader.setInt("prec", sphere->precision());
+            shader.setFloat("radius", sphere->radius());
+        } else if (shader.fragmentShader() == BLINNPHONG) {
+            shader.setVec3("cameraPos", _camera->position());
+        }
+
+        shader.setMat4fv("model", sphere->model());
+        shader.setMat4fv("view", _view);
+        shader.setMat4fv("projection", _projection);
+
+        sphere->draw();
     }
-
-    shader.setMat4fv("model", sphere->model());
-    shader.setMat4fv("view", _view);
-    shader.setMat4fv("projection", _projection);
-
-    sphere->draw();
 
 }
 
@@ -93,6 +91,10 @@ bool Scene::keyboard(unsigned char k) {
         default:
             return false;
     }
+}
+
+void Scene::switchFragmentShader(FragmentShader fs) {
+
 }
 
 void Scene::toggledrawmode() {

@@ -6,10 +6,12 @@ uniform mat4 view;
 uniform mat4 projection;
 out vec3 normal;
 out vec3 fragPos;
+out vec3 fragPosWorld;
 
 void main(){
     // Note that we read the multiplication from right to left
     gl_Position = projection * view * model * vec4(position, 1.0f);
     normal = normalize(inormal);
-    fragPos = vec3( model * vec4(position, 1.0f));
+    fragPos = position;
+    fragPosWorld = vec3(model*vec4(position,1));
 }

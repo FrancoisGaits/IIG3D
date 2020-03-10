@@ -8,15 +8,12 @@
 #include <stdexcept>
 
 
-MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent)/*, QOpenGLFunctions_4_1_Core()*/,
-                                                  currentFs(FACETTE),
-                                                  precisionFactor(1), drawfill(true),
-                                                  _scene(nullptr), _lastime(0){
+MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent)/*, QOpenGLFunctions_4_1_Core()*/, currScene(0),
+                                                  currFs(ERREUR), drawfill(true), _scene(nullptr), _lastime(0){
 
     // add all demo constructors here
-    _sceneconstructors.emplace_back([](int width, int height) -> Scene * {
-        std::cout << "Clear" << std::endl;
-        return new Scene(width, height);
+    _sceneconstructors.emplace_back([this](int width, int height) -> Scene * {
+        return new Scene(width, height, drawfill, currPrec, currFs);
     });
 
     /*
@@ -33,8 +30,8 @@ MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent)/*, QOpen
 }
 
 void MyOpenGLWidget::switchFragmentShader(FragmentShader fs) {
-    currentFs = fs;
-    resetScene();
+    currFs = fs;
+    activateScene(currScene);
 }
 
 MyOpenGLWidget::~MyOpenGLWidget() {
@@ -46,7 +43,7 @@ QSize MyOpenGLWidget::minimumSizeHint() const {
 }
 
 QSize MyOpenGLWidget::sizeHint() const {
-    return QSize(512, 512);
+    return QSize(768, 576);
 }
 
 void MyOpenGLWidget::cleanup() {
@@ -54,10 +51,7 @@ void MyOpenGLWidget::cleanup() {
 }
 
 void MyOpenGLWidget::initializeGL() {
-    std::cout << "INITIALIZE" << std::endl;
     connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &MyOpenGLWidget::cleanup);
-
-    currScene = 0;
     
     if (!initializeOpenGLFunctions()) {
         QMessageBox::critical(this, "OpenGL initialization error",
@@ -69,7 +63,6 @@ void MyOpenGLWidget::initializeGL() {
 }
 
 void MyOpenGLWidget::paintGL() {
-    std::cout << "PAINT" << std::endl;
     std::int64_t starttime = QDateTime::currentMSecsSinceEpoch();
     _scene->draw();
     glFinish();
@@ -118,7 +111,7 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
         case Qt::Key_7:
         case Qt::Key_8:
         case Qt::Key_9:
-            activatedemo(event->key() - Qt::Key_0);
+            activateScene(event->key() - Qt::Key_0);
             break;
             // Move keys
         case Qt::Key_Left:
@@ -135,21 +128,21 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
             update();
             break;
         case Qt::Key_C: {
-            if (precisionFactor > 1) {
-                --precisionFactor;
-                resetScene();
+            if (currPrec > 1) {
+                --currPrec;
             } else {
-                precisionFactor = 1;
+                currPrec = 1;
             }
+            activateScene(currScene);
         }
             break;
         case Qt::Key_V:{
-            if (precisionFactor < 30) {
-                ++precisionFactor;
-                resetScene();
+            if (currPrec < 30) {
+                ++currPrec;
             } else {
-                precisionFactor = 30;
+                currPrec = 30;
             }
+            activateScene(currScene);
         }
             break;
 
@@ -161,12 +154,7 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
     }
 }
 
-void MyOpenGLWidget::resetScene() {
-    activatedemo(currScene);
-}
-
-void MyOpenGLWidget::activatedemo(unsigned int numScene) {
-    std::cout << "ACTIVATE " << numScene << std::endl;
+void MyOpenGLWidget::activateScene(unsigned int numScene) {
     if (numScene < _sceneconstructors.size()) {
 	    currScene = numScene;
         makeCurrent();

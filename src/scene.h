@@ -5,6 +5,7 @@
 #include <vector>
 #include "opengl_stuff.h"
 #include "src/Sphere/UVSphere.h"
+#include "src/Sphere/GeoSphere.h"
 #include "shaders.h"
 #include "camera/camera.h"
 
@@ -14,7 +15,7 @@
 class Scene {
 
 public:
-    explicit Scene(int width, int height, bool drawfill=true);
+    explicit Scene(int width, int height,  bool drawfill, unsigned precision, FragmentShader fs, VertexShader vs = VERTEX);
     virtual ~Scene();
 
     virtual void resize(int width, int height);
@@ -25,6 +26,7 @@ public:
     virtual void keyboardmove(int key, double time);
     virtual bool keyboard(unsigned char k);
 
+    void switchFragmentShader(FragmentShader fs);
 
     void toggledrawmode();
 
@@ -53,7 +55,7 @@ private:
     float _mousey{0};
 
     Shader shader;
-    std::unique_ptr<Sphere> sphere;
+    std::vector<std::unique_ptr<Sphere>> spheres;
 
 };
 

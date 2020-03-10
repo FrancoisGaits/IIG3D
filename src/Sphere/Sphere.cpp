@@ -5,7 +5,7 @@ Sphere::Sphere(float radius, unsigned precision) :_radius(radius), _precision(pr
 }
 
 
-int Sphere::precision() {
+unsigned Sphere::precision() {
     return _precision;
 }
 
@@ -15,6 +15,11 @@ float Sphere::radius() {
 
 glm::mat4& Sphere::model() {
     return _model;
+}
+
+void Sphere::translate(glm::vec3 vec) {
+    std::cout << "translation" << std::endl;
+    _model = glm::translate(_model, vec);
 }
 
 void Sphere::draw() {
