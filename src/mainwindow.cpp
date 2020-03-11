@@ -59,15 +59,19 @@ void MainWindow::on_action_shaderBlinnPhong_triggered() {
 }
 
 void MainWindow::on_actionClear_triggered() {
-    openglWidget->activateScene(0);
+    openglWidget->switchState(CLEAR);
 }
 
 
 void MainWindow::on_actionUV_Sphere_triggered() {
-    openglWidget->activateScene(1);
+    openglWidget->switchState(UV);
 }
 
 void MainWindow::on_actionGeo_Sphere_triggered() {
-    openglWidget->activateScene(2);
+    openglWidget->switchState(GEO);
+}
+
+void MainWindow::on_actionDemo_triggered() {
+    openglWidget->switchState(DEMO);
 }
 

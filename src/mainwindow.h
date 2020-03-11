@@ -27,6 +27,7 @@ private slots:
     void on_action_shaderBlinnPhong_triggered();
     
     void on_actionGeo_Sphere_triggered();
+    void on_actionDemo_triggered();
 
     void on_actionUV_Sphere_triggered();
 

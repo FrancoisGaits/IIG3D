@@ -18,7 +18,6 @@ glm::mat4& Sphere::model() {
 }
 
 void Sphere::translate(glm::vec3 vec) {
-    std::cout << "translation" << std::endl;
     _model = glm::translate(_model, vec);
 }
 

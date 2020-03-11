@@ -15,7 +15,7 @@
 class Scene {
 
 public:
-    explicit Scene(int width, int height,  bool drawfill, unsigned precision, FragmentShader fs, VertexShader vs = VERTEX);
+    explicit Scene(int width, int height, FragmentShader fs, VertexShader vs = VERTEX);
     virtual ~Scene();
 
     virtual void resize(int width, int height);
@@ -26,9 +26,9 @@ public:
     virtual void keyboardmove(int key, double time);
     virtual bool keyboard(unsigned char k);
 
-    void switchFragmentShader(FragmentShader fs);
+    void addGeoSphere(float radius, unsigned precision, glm::vec3 position);
+    void addUVSphere(float radius, unsigned precision, glm::vec3 position);
 
-    void toggledrawmode();
 
 private:
 
@@ -36,8 +36,6 @@ private:
     int _width;
     int _height;
 
-    // Rendering mode (true is filled, false is wireframed
-    bool _drawfill;
 
     glm::mat4 _view;
     glm::mat4 _projection;

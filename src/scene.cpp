@@ -2,15 +2,19 @@
 #include <iostream>
 
 
-Scene::Scene(int width, int height, bool drawfill, unsigned precision, FragmentShader fs, VertexShader vs) :
-                                                                    _width(width), _height(height), _drawfill(drawfill),
+Scene::Scene(int width, int height, FragmentShader fs, VertexShader vs) :
+                                                                    _width(width), _height(height),
                                                                     _activecamera(1), shader(vs, fs) {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
     glViewport(0, 0, width, height);
 
-    spheres.emplace_back(new GeoSphere(0.3,precision));
+//    spheres.emplace_back(new GeoSphere(0.3, precision));
+//    spheres.emplace_back(new GeoSphere(0.3, precision));
+//
+//    spheres[0]->translate(glm::vec3(-0.5,0,0));
+//    spheres[1]->translate(glm::vec3(0.5,0,0));
 
     _cameraselector.emplace_back([]() -> Camera * { return new EulerCamera(glm::vec3(0.f, 0.f, 1.f)); });
     _cameraselector.emplace_back([]() -> Camera * {
@@ -40,10 +44,6 @@ void Scene::draw() {
     glClearColor(0.05f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    if (_drawfill)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    else
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     _view = _camera->viewmatrix();
 
@@ -93,11 +93,13 @@ bool Scene::keyboard(unsigned char k) {
     }
 }
 
-void Scene::switchFragmentShader(FragmentShader fs) {
-
+void Scene::addUVSphere(float radius, unsigned precision, glm::vec3 position) {
+    spheres.emplace_back(new UVSphere(radius, precision));
+    spheres.back()->translate(position);
 }
 
-void Scene::toggledrawmode() {
-    _drawfill = !_drawfill;
+void Scene::addGeoSphere(float radius, unsigned precision, glm::vec3 position) {
+    spheres.emplace_back(new GeoSphere(radius, precision));
+    spheres.back()->translate(position);
 }
 

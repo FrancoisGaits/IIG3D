@@ -50,6 +50,7 @@
     <addaction name="actionClear"/>
     <addaction name="actionUV_Sphere"/>
     <addaction name="actionGeo_Sphere"/>
+    <addaction name="actionDemo"/>
    </widget>
    <addaction name="menu_scenes"/>
    <addaction name="menuShader"/>
@@ -82,6 +83,14 @@
    </property>
    <property name="toolTip">
     <string>Display Geo Sphere</string>
+   </property>
+  </action>
+  <action name="actionDemo">
+   <property name="text">
+    <string>Demo</string>
+   </property>
+   <property name="toolTip">
+    <string>Display Demo</string>
    </property>
   </action>
   <action name="action_shaderLambert">

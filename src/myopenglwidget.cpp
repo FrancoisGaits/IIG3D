@@ -8,30 +8,18 @@
 #include <stdexcept>
 
 
-MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent)/*, QOpenGLFunctions_4_1_Core()*/, currScene(0),
-                                                  currFs(ERREUR), drawfill(true), _scene(nullptr), _lastime(0){
+MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent), currFs(ERREUR), currPrec(1), currState(GEO), drawfill(true),
+                                                                        _scene(nullptr), _lastime(0){
 
-    // add all demo constructors here
-    _sceneconstructors.emplace_back([this](int width, int height) -> Scene * {
-        return new Scene(width, height, drawfill, currPrec, currFs);
-    });
 
-    /*
-    _sceneconstructors.emplace_back([this](int width, int height) -> Scene * {
-        std::cout << "UV Sphere : \n\tprecision : " << precisionFactor << std::endl;
-        return new UVSphere(width, height, currentFs, precisionFactor, drawfill);
+    _sceneconstructor = ([this](int width, int height) -> Scene * {
+        return new Scene(width, height, currFs);
     });
-
-    _sceneconstructors.emplace_back([this](int width, int height) -> Scene * {
-        std::cout << "Geo Sphere : \n\tprecision : " << precisionFactor << std::endl;
-        return new GeoSphere(width, height, currentFs, precisionFactor, drawfill);
-    });
-     */
 }
 
 void MyOpenGLWidget::switchFragmentShader(FragmentShader fs) {
     currFs = fs;
-    activateScene(currScene);
+    resetScene();
 }
 
 MyOpenGLWidget::~MyOpenGLWidget() {
@@ -47,7 +35,7 @@ QSize MyOpenGLWidget::sizeHint() const {
 }
 
 void MyOpenGLWidget::cleanup() {
-    _scene.reset(nullptr);
+    _scene = nullptr;
 }
 
 void MyOpenGLWidget::initializeGL() {
@@ -59,11 +47,17 @@ void MyOpenGLWidget::initializeGL() {
         exit(1);
     }
     // Initialize OpenGL and all OpenGL dependent stuff below
-    _scene.reset(_sceneconstructors[currScene](width(), height()));
+    resetScene();
 }
 
 void MyOpenGLWidget::paintGL() {
     std::int64_t starttime = QDateTime::currentMSecsSinceEpoch();
+
+    if (drawfill)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    else
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
     _scene->draw();
     glFinish();
     std::int64_t endtime = QDateTime::currentMSecsSinceEpoch();
@@ -100,20 +94,6 @@ void MyOpenGLWidget::mouseMoveEvent(QMouseEvent *event) {
 
 void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
     switch (event->key()) {
-        // Demo keys
-        case Qt::Key_0:
-        case Qt::Key_1:
-        case Qt::Key_2:
-        case Qt::Key_3:
-        case Qt::Key_4:
-        case Qt::Key_5:
-        case Qt::Key_6:
-        case Qt::Key_7:
-        case Qt::Key_8:
-        case Qt::Key_9:
-            activateScene(event->key() - Qt::Key_0);
-            break;
-            // Move keys
         case Qt::Key_Left:
         case Qt::Key_Up:
         case Qt::Key_Right:
@@ -123,7 +103,6 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
             break;
             // Wireframe key
         case Qt::Key_W:
-            _scene->toggledrawmode();
             drawfill = !drawfill;
             update();
             break;
@@ -133,7 +112,7 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
             } else {
                 currPrec = 1;
             }
-            activateScene(currScene);
+            resetScene();
         }
             break;
         case Qt::Key_V:{
@@ -142,7 +121,7 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
             } else {
                 currPrec = 30;
             }
-            activateScene(currScene);
+            resetScene();
         }
             break;
 
@@ -154,13 +133,32 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
     }
 }
 
-void MyOpenGLWidget::activateScene(unsigned int numScene) {
-    if (numScene < _sceneconstructors.size()) {
-	    currScene = numScene;
-        makeCurrent();
-        _scene.reset(_sceneconstructors[numScene](width(), height()));
-        doneCurrent();
-        update();
+void MyOpenGLWidget::switchState(State s) {
+    currPrec = 1;
+    currState = s;
+    resetScene();
+}
+
+void MyOpenGLWidget::resetScene() {
+    makeCurrent();
+    _scene = _sceneconstructor(width(), height());
+    switch(currState) {
+        case UV :
+            _scene->addUVSphere(0.4, currPrec, glm::vec3(0));
+            break;
+        case GEO :
+            _scene->addGeoSphere(0.4, currPrec, glm::vec3(0));
+            break;
+        case DEMO:
+            _scene->addGeoSphere(0.2, 2, glm::vec3(-0.7,0.2,-0.3));
+            _scene->addUVSphere(0.4, 4, glm::vec3(0,0,-0.8));
+            _scene->addGeoSphere(0.1, 1, glm::vec3(0.2,-0.2,0.3));
+            break;
+        case CLEAR:
+        default:
+            break;
     }
+    doneCurrent();
+    update();
 }
 

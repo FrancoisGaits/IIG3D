@@ -12,6 +12,13 @@
 #include "src/Sphere/UVSphere.h"
 #include "shaders.h"
 
+enum State {
+    CLEAR,
+    UV,
+    GEO,
+    DEMO
+};
+
 class MyOpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_4_1_Core {
 
 public:
@@ -24,10 +31,11 @@ public:
     QSize sizeHint() const override;
 
     // Demo management
-    void activateScene(unsigned int numScene);
+    void resetScene();
 
     void switchFragmentShader(FragmentShader fs);
-    
+    void switchState(State s);
+
 public slots:
     void cleanup();
 
@@ -44,15 +52,15 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
 private :
-    unsigned currScene;
     FragmentShader currFs;
     unsigned currPrec;
+    State currState;
     bool drawfill;
 
-    std::unique_ptr<Scene> _scene;
+    Scene * _scene;
 
     using SceneConstructors=std::function<Scene*(int, int)>;
-    std::vector<SceneConstructors> _sceneconstructors;
+    SceneConstructors _sceneconstructor;
     
     // for event management
     std::int64_t _lastime;
