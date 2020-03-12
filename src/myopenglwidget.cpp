@@ -152,7 +152,7 @@ void MyOpenGLWidget::resetScene() {
         case DEMO:
             _scene->addGeoSphere(0.2, 2, glm::vec3(-0.7,0.2,-0.3));
             _scene->addUVSphere(0.4, 4, glm::vec3(0,0,-0.8));
-            _scene->addGeoSphere(0.1, 1, glm::vec3(0.2,-0.2,0.3));
+            _scene->addGeoSphere(0.1, 5, glm::vec3(0.2,-0.1,0.2));
             break;
         case CLEAR:
         default:

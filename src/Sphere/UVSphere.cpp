@@ -3,11 +3,9 @@
 
 UVSphere::UVSphere(float radius, unsigned precision) : Sphere(radius,precision){
     mesh = generateSphereAttributes(radius, precision);
-    std::cout << "MESH GENERATED" << std::endl;
-    mesh.load();
-    std::cout << "MESH LOADED" << std::endl;
-}
 
+    mesh.load();
+}
 
 Mesh UVSphere::generateSphereAttributes(float radius, unsigned precision) {
     unsigned nbParallels = precision + 3;

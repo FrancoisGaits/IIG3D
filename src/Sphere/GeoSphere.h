@@ -21,6 +21,8 @@ private:
 
     std::map<std::pair<unsigned,unsigned>,unsigned> cache;
 
+    Mesh subdivide(Mesh &mesh, float radius);
+
     const float c1 = 1.f/sqrtf(1 + 1.61803398875f*1.61803398875f);
     const float c2 = 1.61803398875f*c1;
 };

@@ -4,7 +4,6 @@ Sphere::Sphere(float radius, unsigned precision) :_radius(radius), _precision(pr
 
 }
 
-
 unsigned Sphere::precision() {
     return _precision;
 }

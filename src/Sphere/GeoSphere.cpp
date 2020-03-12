@@ -4,11 +4,38 @@
 
 
 
-GeoSphere::GeoSphere(float radius, unsigned precision) : Sphere(radius, precision*precision+1) {
+GeoSphere::GeoSphere(float radius, unsigned precision) : Sphere(radius, pow(3.5,precision-1)+1) {
 
     mesh = generateSphereAttributes(radius, precision-1);
 
     mesh.load();
+}
+
+Mesh GeoSphere::subdivide(Mesh &mesh, float radius) {
+    Mesh tmpMesh;
+    tmpMesh.vertices = mesh.vertices;
+    cache.clear();
+    for (unsigned i = 0; i < mesh.indices.size(); i += 3) {
+        unsigned a = mesh.indices[i];        //   a
+        unsigned b = mesh.indices[i + 1];      //  / \ ~
+        unsigned c = mesh.indices[i + 2];      // b---c
+
+        glm::vec3 v0 = glm::vec3(mesh.vertices[a * 3], mesh.vertices[a * 3 + 1], mesh.vertices[a * 3 + 2]);
+        glm::vec3 v1 = glm::vec3(mesh.vertices[b * 3], mesh.vertices[b * 3 + 1], mesh.vertices[b * 3 + 2]);
+        glm::vec3 v2 = glm::vec3(mesh.vertices[c * 3], mesh.vertices[c * 3 + 1], mesh.vertices[c * 3 + 2]);
+
+        unsigned d = divideEdge(a, b, radius, v0, v1, tmpMesh);
+        unsigned e = divideEdge(b, c, radius, v1, v2, tmpMesh);
+        unsigned f = divideEdge(c, a, radius, v2, v0, tmpMesh);
+
+        tmpMesh.addTri(a, d, f);
+        tmpMesh.addTri(d, b, e);
+        tmpMesh.addTri(e, c, f);
+        tmpMesh.addTri(d, e, f);
+    }
+    tmpMesh.normals = tmpMesh.vertices;
+
+    return tmpMesh;
 }
 
 unsigned GeoSphere::divideEdge(unsigned a, unsigned b, float radius, glm::vec3 &v1, glm::vec3 &v2, Mesh &tmpMesh) {
@@ -81,29 +108,7 @@ Mesh GeoSphere::generateSphereAttributes(float radius, unsigned precision) {
     };
 
     for (unsigned div = 0; div < precision; ++div) {
-        Mesh tmpMesh;
-        tmpMesh.vertices = mesh.vertices;
-        cache.clear();
-        for (unsigned i = 0; i < mesh.indices.size(); i += 3) {
-            unsigned a = mesh.indices[i];        //   a
-            unsigned b = mesh.indices[i + 1];      //  / \ ~
-            unsigned c = mesh.indices[i + 2];      // b---c
-
-            glm::vec3 v0 = glm::vec3(mesh.vertices[a * 3], mesh.vertices[a * 3 + 1], mesh.vertices[a * 3 + 2]);
-            glm::vec3 v1 = glm::vec3(mesh.vertices[b * 3], mesh.vertices[b * 3 + 1], mesh.vertices[b * 3 + 2]);
-            glm::vec3 v2 = glm::vec3(mesh.vertices[c * 3], mesh.vertices[c * 3 + 1], mesh.vertices[c * 3 + 2]);
-
-            unsigned d = divideEdge(a, b, radius, v0, v1, tmpMesh);
-            unsigned e = divideEdge(b, c, radius, v1, v2, tmpMesh);
-            unsigned f = divideEdge(c, a, radius, v2, v0, tmpMesh);
-
-            tmpMesh.addTri(a, d, f);
-            tmpMesh.addTri(d, b, e);
-            tmpMesh.addTri(e, c, f);
-            tmpMesh.addTri(d, e, f);
-        }
-        tmpMesh.normals = tmpMesh.vertices;
-        mesh = tmpMesh;
+        mesh = subdivide(mesh, radius);
     }
     std::cout << "\ttriangles : " << mesh.nbTriangles() << std::endl;
 

@@ -12,6 +12,7 @@ class UVSphere : public Sphere {
 public:
     explicit UVSphere(float radius, unsigned precision);
 
+
 private:
     Mesh generateSphereAttributes(float radius, unsigned precision);
 };

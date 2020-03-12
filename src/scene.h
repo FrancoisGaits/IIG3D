@@ -29,7 +29,6 @@ public:
     void addGeoSphere(float radius, unsigned precision, glm::vec3 position);
     void addUVSphere(float radius, unsigned precision, glm::vec3 position);
 
-
 private:
 
     // Width and heigth of the viewport

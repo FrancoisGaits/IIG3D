@@ -241,6 +241,7 @@ void TrackballCamera::rotatecamera() {
         glm::vec3 center = _position + _front * _radius;
         _front = glm::normalize(glm::rotate(quaternion, _front));
         _up = glm::normalize(glm::rotate(quaternion, _up));
+
         _position = center - _front * _radius;
         _rotstart = _rotend;
     }
