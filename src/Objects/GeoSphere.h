@@ -12,7 +12,7 @@
 
 class GeoSphere : public Sphere {
 public:
-    explicit GeoSphere(float radius, unsigned precision);
+    explicit GeoSphere(float radius, unsigned precision, glm::vec3 color = glm::vec3(1));
 
     std::string infoString() final;
 

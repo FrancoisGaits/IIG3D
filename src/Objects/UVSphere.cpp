@@ -2,7 +2,7 @@
 #include <iostream>
 #include <sstream>
 
-UVSphere::UVSphere(float radius, unsigned precision) : Sphere(radius,precision){
+UVSphere::UVSphere(float radius, unsigned precision, glm::vec3 color) : Sphere(radius, precision, color){
     mesh = generateSphereAttributes(radius, precision);
 
     mesh.load();
@@ -70,7 +70,6 @@ Mesh UVSphere::generateSphereAttributes(float radius, unsigned precision) {
             }
         }
     }
-    std::cout << "\ttriangles : " << mesh.nbTriangles() << std::endl;
 
     return mesh;
 }

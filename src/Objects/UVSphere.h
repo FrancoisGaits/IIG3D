@@ -10,7 +10,7 @@
 
 class UVSphere : public Sphere {
 public:
-    explicit UVSphere(float radius, unsigned precision);
+    explicit UVSphere(float radius, unsigned precision, glm::vec3 color = glm::vec3(1));
 
     std::string infoString() final;
 

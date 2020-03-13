@@ -13,12 +13,13 @@
  */
 class Sphere {
 public:
-    explicit Sphere(float radius, unsigned precision);
+    explicit Sphere(float radius, unsigned precision, glm::vec3 color = glm::vec3(1));
 
     void draw();
 
     unsigned precision();
     float radius();
+    glm::vec3& color();
     unsigned triangles();
     glm::mat4& model();
 
@@ -32,6 +33,7 @@ private:
 
     float _radius;
     unsigned _precision;
+    glm::vec3 _color;
 
     // matrices
     glm::mat4 _model;

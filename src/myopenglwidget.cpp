@@ -156,9 +156,9 @@ void MyOpenGLWidget::resetScene() {
             _scene->addUVSphere(0.4, 4, glm::vec3(0.1,-0.2,-0.8));
             _scene->addUVSphere(2, 2, glm::vec3(0.6,0.3,-4));
 
-            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3,-0.3,-0.2));
-            _scene->addGeoSphere(0.1, 3, glm::vec3(-0.1,-0.3,0.2));
-            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3,0.3,0.2));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3,-0.3,-0.2),glm::vec3(0.5,0,0));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(-0.1,-0.3,0.2), glm::vec3(0,0.5,0));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3,0.3,0.2), glm::vec3(0,0,0.5));
             _scene->addGeoSphere(0.1, 3, glm::vec3(-0.1,0.3,-0.2));
 
             break;

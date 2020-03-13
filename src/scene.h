@@ -27,8 +27,9 @@ public:
     virtual void keyboardmove(int key, double time);
     virtual bool keyboard(unsigned char k);
 
-    void addGeoSphere(float radius, unsigned precision, glm::vec3 position);
-    void addUVSphere(float radius, unsigned precision, glm::vec3 position);
+    void addGeoSphere(float radius, unsigned precision, glm::vec3 position, glm::vec3 color = glm::vec3(1));
+
+    void addUVSphere(float radius, unsigned precision, glm::vec3 position, glm::vec3 color = glm::vec3(1));
 
     void addPointLight(glm::vec3 position, glm::vec3 color);
     void addSpotLight(glm::vec3 position, glm::vec3 color, glm::vec3 focus, float limit);

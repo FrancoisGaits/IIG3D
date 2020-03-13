@@ -3,7 +3,7 @@
 #include <sstream>
 
 
-GeoSphere::GeoSphere(float radius, unsigned precision) : Sphere(radius, static_cast<unsigned>(pow(3.5,precision-1)+1)) {
+GeoSphere::GeoSphere(float radius, unsigned precision, glm::vec3 color) : Sphere(radius, static_cast<unsigned>(pow(3.5,precision-1)+1), color) {
 
     mesh = generateSphereAttributes(radius, precision-1);
 
@@ -109,7 +109,6 @@ Mesh GeoSphere::generateSphereAttributes(float radius, unsigned precision) {
     for (unsigned div = 0; div < precision; ++div) {
         mesh = subdivide(mesh, radius);
     }
-    std::cout << "\ttriangles : " << mesh.nbTriangles() << std::endl;
 
     return mesh;
 }

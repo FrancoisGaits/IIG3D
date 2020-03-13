@@ -1,6 +1,6 @@
 #include "Sphere.h"
 
-Sphere::Sphere(float radius, unsigned precision) :_radius(radius), _precision(precision) {
+Sphere::Sphere(float radius, unsigned precision, glm::vec3 color) :_radius(radius), _precision(precision), _color(color) {
 
 }
 
@@ -26,4 +26,8 @@ void Sphere::draw() {
 
 unsigned Sphere::triangles() {
     return mesh.nbTriangles();
+}
+
+glm::vec3 &Sphere::color() {
+    return _color;
 }

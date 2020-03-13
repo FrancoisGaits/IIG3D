@@ -10,12 +10,6 @@ Scene::Scene(int width, int height, FragmentShader fs, VertexShader vs) :
     glEnable(GL_MULTISAMPLE);
     glViewport(0, 0, width, height);
 
-//    spheres.emplace_back(new GeoSphere(0.3, precision));
-//    spheres.emplace_back(new GeoSphere(0.3, precision));
-//
-//    spheres[0]->translate(glm::vec3(-0.5,0,0));
-//    spheres[1]->translate(glm::vec3(0.5,0,0));
-
     _cameraselector.emplace_back([]() -> Camera * { return new EulerCamera(glm::vec3(0.f, 0.f, 1.f)); });
     _cameraselector.emplace_back([]() -> Camera * {
         return new TrackballCamera(glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f));
@@ -55,10 +49,11 @@ void Scene::draw() {
             shader.setFloat("radius", sphere->radius());
         } else if (shader.fragmentShader() == BLINNPHONG) {
             shader.setVec3("cameraPos", _camera->position());
-            shader.setInt("_light_nb", lights.size());
+            shader.setInt("nbLight", lights.size());
+            shader.setVec3("objectColor", sphere->color());
             int i = 0;
             for(const auto & light :  lights) {
-                shader.setLight("_lights["+std::to_string(i)+"]", light);
+                shader.setLight("lights["+std::to_string(i)+"]", light);
                 ++i;
             }
         }
@@ -99,16 +94,6 @@ bool Scene::keyboard(unsigned char k) {
     }
 }
 
-void Scene::addUVSphere(float radius, unsigned precision, glm::vec3 position) {
-    spheres.emplace_back(new UVSphere(radius, precision));
-    spheres.back()->translate(position);
-}
-
-void Scene::addGeoSphere(float radius, unsigned precision, glm::vec3 position) {
-    spheres.emplace_back(new GeoSphere(radius, precision));
-    spheres.back()->translate(position);
-}
-
 void Scene::addPointLight(glm::vec3 position, glm::vec3 color) {
     lights.emplace_back(Light(POINT, position, color));
 }
@@ -127,5 +112,15 @@ std::string Scene::sceneInfoString() {
     }
 
     return mess.str();
+}
+
+void Scene::addGeoSphere(float radius, unsigned precision, glm::vec3 position, glm::vec3 color) {
+    spheres.emplace_back(new GeoSphere(radius, precision, color));
+    spheres.back()->translate(position);
+}
+
+void Scene::addUVSphere(float radius, unsigned precision, glm::vec3 position, glm::vec3 color) {
+    spheres.emplace_back(new UVSphere(radius, precision, color));
+    spheres.back()->translate(position);
 }
 
