@@ -1,10 +1,9 @@
 #include "GeoSphere.h"
 #include <iostream>
+#include <sstream>
 
 
-
-
-GeoSphere::GeoSphere(float radius, unsigned precision) : Sphere(radius, pow(3.5,precision-1)+1) {
+GeoSphere::GeoSphere(float radius, unsigned precision) : Sphere(radius, static_cast<unsigned>(pow(3.5,precision-1)+1)) {
 
     mesh = generateSphereAttributes(radius, precision-1);
 
@@ -113,4 +112,13 @@ Mesh GeoSphere::generateSphereAttributes(float radius, unsigned precision) {
     std::cout << "\ttriangles : " << mesh.nbTriangles() << std::endl;
 
     return mesh;
+}
+
+std::string GeoSphere::infoString() {
+    std::stringstream mess;
+    mess << "GeoSphere :" << std::endl;
+    mess << "    -precision : " << precision() << std::endl;
+    mess << "    -radius : " << radius() << std::endl;
+    mess << "    -triangles : " << triangles() << std::endl;
+    return  mess.str();
 }

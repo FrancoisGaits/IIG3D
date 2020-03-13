@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 2.8.9) # Minimal version compatible QT5
 CMAKE_POLICY(SET CMP0043 NEW) # This will silence the Cmake Warning "Policy CMP0043 is not set"
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -Wextra")
-#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
@@ -65,8 +65,7 @@ set( CMAKE_INCLUDE_CURRENT_DIR ON )
 add_executable(${PROJECT_NAME}
                ${folder_source}
                ${folder_header}
-               ${folder_ui}
-        )
+               ${folder_ui})
 
 set(EXT_LIBS Qt5::OpenGL ${OPENGL_LIBRARIES})
 

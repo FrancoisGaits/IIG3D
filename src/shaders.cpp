@@ -83,6 +83,15 @@ void Shader::use() {
     glUseProgram(ID);
 }
 
+
+void Shader::setLight(const std::string &name, const Light & light) const {
+    setInt(name+".type", light.type());
+    setVec3(name+".position", light.position());
+    setVec3(name+".color", light.color());
+    setVec3(name+".focus", light.focus());
+    setFloat(name+".limit", light.limit());
+}
+
 void Shader::setBool(const std::string &name, bool value) const {
     int loc = glGetUniformLocation(ID, name.c_str());
     if(loc >= 0)
@@ -107,7 +116,7 @@ void Shader::setFloat(const std::string &name, float value) const {
         std::cerr << "Unable to locate '" << name << "' Uniform in shader : " << ID << std::endl;
 }
 
-void Shader::setMat4fv(const std::string &name, glm::mat4 &value) const {
+void Shader::setMat4fv(const std::string &name, const glm::mat4 &value) const {
     int loc = glGetUniformLocation(ID, name.c_str());
     if(loc >= 0)
         glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(value));
@@ -115,7 +124,7 @@ void Shader::setMat4fv(const std::string &name, glm::mat4 &value) const {
         std::cerr << "Unable to locate '" << name << "' Uniform in shader : " << ID << std::endl;
 }
 
-void Shader::setVec3(const std::string &name, glm::vec3 &value) const {
+void Shader::setVec3(const std::string &name, const glm::vec3 &value) const {
     int loc = glGetUniformLocation(ID, name.c_str());
     if(loc >= 0)
         glUniform3f(loc, value.x, value.y, value.z);
@@ -155,3 +164,4 @@ std::string Shader::getVertexShaderPath() {
             return _basePath;
     }
 }
+

@@ -14,6 +14,8 @@ class GeoSphere : public Sphere {
 public:
     explicit GeoSphere(float radius, unsigned precision);
 
+    std::string infoString() final;
+
 private:
     unsigned divideEdge(unsigned a, unsigned b, float radius, glm::vec3& v1, glm::vec3& v2, Mesh& tmpMesh);
 

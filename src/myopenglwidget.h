@@ -19,6 +19,12 @@ enum State {
     DEMO
 };
 
+enum Lighting {
+    BASIC,
+    THREE,
+    THREEC
+};
+
 class MyOpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_4_1_Core {
 
 public:
@@ -35,6 +41,9 @@ public:
 
     void switchFragmentShader(FragmentShader fs);
     void switchState(State s);
+    void switchLighting(Lighting l);
+
+    std::string sceneInfoString();
 
 public slots:
     void cleanup();
@@ -55,6 +64,7 @@ private :
     FragmentShader currFs;
     unsigned currPrec;
     State currState;
+    Lighting currLight;
     bool drawfill;
 
     Scene * _scene;

@@ -55,6 +55,12 @@ void Scene::draw() {
             shader.setFloat("radius", sphere->radius());
         } else if (shader.fragmentShader() == BLINNPHONG) {
             shader.setVec3("cameraPos", _camera->position());
+            shader.setInt("_light_nb", lights.size());
+            int i = 0;
+            for(const auto & light :  lights) {
+                shader.setLight("_lights["+std::to_string(i)+"]", light);
+                ++i;
+            }
         }
 
         shader.setMat4fv("model", sphere->model());
@@ -101,5 +107,25 @@ void Scene::addUVSphere(float radius, unsigned precision, glm::vec3 position) {
 void Scene::addGeoSphere(float radius, unsigned precision, glm::vec3 position) {
     spheres.emplace_back(new GeoSphere(radius, precision));
     spheres.back()->translate(position);
+}
+
+void Scene::addPointLight(glm::vec3 position, glm::vec3 color) {
+    lights.emplace_back(Light(POINT, position, color));
+}
+
+void Scene::addSpotLight(glm::vec3 position, glm::vec3 color, glm::vec3 focus, float limit) {
+    lights.emplace_back(Light(SPOT, position, color, focus, limit));
+}
+
+std::string Scene::sceneInfoString() {
+    std::stringstream mess;
+    for(const auto & sphere : spheres) {
+        mess << sphere->infoString();
+    }
+    for(const auto & light : lights) {
+        mess << light.infoString();
+    }
+
+    return mess.str();
 }
 

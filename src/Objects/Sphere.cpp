@@ -23,3 +23,7 @@ void Sphere::translate(glm::vec3 vec) {
 void Sphere::draw() {
     mesh.draw();
 }
+
+unsigned Sphere::triangles() {
+    return mesh.nbTriangles();
+}

@@ -42,6 +42,10 @@ void MainWindow::on_action_Version_OpenGL_triggered() {
     QMessageBox::information(this, "OpenGL Information", message.str().c_str());
 }
 
+void MainWindow::on_action_infoScene_triggered() {
+    QMessageBox::information(this, "Information Scene", openglWidget->sceneInfoString().c_str());
+}
+
 void MainWindow::on_action_shaderLambert_triggered() {
   openglWidget->switchFragmentShader(LAMBERT);
 }
@@ -62,6 +66,17 @@ void MainWindow::on_actionClear_triggered() {
     openglWidget->switchState(CLEAR);
 }
 
+void MainWindow::on_action_3points_triggered() {
+    openglWidget->switchLighting(THREE);
+}
+
+void MainWindow::on_action_3pointsC_triggered() {
+    openglWidget->switchLighting(THREEC);
+}
+
+void MainWindow::on_action_basic_triggered() {
+    openglWidget->switchLighting(BASIC);
+}
 
 void MainWindow::on_actionUV_Sphere_triggered() {
     openglWidget->switchState(UV);

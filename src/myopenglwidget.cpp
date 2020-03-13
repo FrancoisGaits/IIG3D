@@ -8,7 +8,7 @@
 #include <stdexcept>
 
 
-MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent), currFs(BLINNPHONG), currPrec(1), currState(DEMO), drawfill(true),
+MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent), currFs(BLINNPHONG), currPrec(1), currState(DEMO), currLight(THREE), drawfill(true),
                                                                         _scene(nullptr), _lastime(0){
 
 
@@ -152,15 +152,45 @@ void MyOpenGLWidget::resetScene() {
             _scene->addGeoSphere(0.35, currPrec, glm::vec3(0));
             break;
         case DEMO:
-            _scene->addGeoSphere(0.2, 2, glm::vec3(-0.7,0.2,-0.3));
-            _scene->addUVSphere(0.4, 4, glm::vec3(0,0,-0.8));
-            _scene->addGeoSphere(0.1, 5, glm::vec3(0.2,-0.1,0.2));
+            _scene->addGeoSphere(0.2, 2, glm::vec3(-0.6,0.,-0.3));
+            _scene->addUVSphere(0.4, 4, glm::vec3(0.1,-0.2,-0.8));
+            _scene->addUVSphere(2, 2, glm::vec3(0.6,0.3,-4));
+
+            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3,-0.3,-0.2));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(-0.1,-0.3,0.2));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3,0.3,0.2));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(-0.1,0.3,-0.2));
+
             break;
         case CLEAR:
         default:
             break;
     }
+    switch (currLight) {
+        case THREE :
+            _scene->addSpotLight(glm::vec3(-1.5f,0.5f,1.f), glm::vec3(1.f), glm::vec3(0,0,-0.5), 0.88);
+            _scene->addSpotLight(glm::vec3(2.f,0.5f,1.f), glm::vec3(0.15f), glm::vec3(0,0,-0.5), 0.85);
+            _scene->addSpotLight(glm::vec3(0.f,1.5f,-3.f), glm::vec3(.65f), glm::vec3(0,0,-0.5), 0.8);
+            break;
+        case THREEC :
+            _scene->addSpotLight(glm::vec3(-1.5f,0.5f,1.f), glm::vec3(1.f,0,0), glm::vec3(0,0,-0.5), 0.88);
+            _scene->addSpotLight(glm::vec3(2.f,0.5f,1.f), glm::vec3(0,0.15f,0), glm::vec3(0,0,-0.5), 0.85);
+            _scene->addSpotLight(glm::vec3(0.f,1.5f,-3.f), glm::vec3(0,0,.65f), glm::vec3(0,0,-0.5), 0.8);
+            break;
+        case BASIC :
+        default:
+            _scene->addPointLight(glm::vec3(1.5),glm::vec3(1));
+    }
     doneCurrent();
     update();
+}
+
+void MyOpenGLWidget::switchLighting(Lighting l) {
+    currLight = l;
+    resetScene();
+}
+
+std::string MyOpenGLWidget::sceneInfoString() {
+    return _scene->sceneInfoString();
 }
 

@@ -1,5 +1,6 @@
 #include "UVSphere.h"
 #include <iostream>
+#include <sstream>
 
 UVSphere::UVSphere(float radius, unsigned precision) : Sphere(radius,precision){
     mesh = generateSphereAttributes(radius, precision);
@@ -72,4 +73,13 @@ Mesh UVSphere::generateSphereAttributes(float radius, unsigned precision) {
     std::cout << "\ttriangles : " << mesh.nbTriangles() << std::endl;
 
     return mesh;
+}
+
+std::string UVSphere::infoString() {
+    std::stringstream mess;
+    mess << "UVSphere :" << std::endl;
+    mess << "    -precision : " << precision() << std::endl;
+    mess << "    -radius : " << radius() << std::endl;
+    mess << "    -triangles : " << triangles() << std::endl;
+    return  mess.str();
 }

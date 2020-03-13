@@ -6,6 +6,7 @@
 #include "opengl_stuff.h"
 #include "src/Objects/UVSphere.h"
 #include "src/Objects/GeoSphere.h"
+#include "src/Objects/Light.h"
 #include "shaders.h"
 #include "camera/camera.h"
 
@@ -28,6 +29,11 @@ public:
 
     void addGeoSphere(float radius, unsigned precision, glm::vec3 position);
     void addUVSphere(float radius, unsigned precision, glm::vec3 position);
+
+    void addPointLight(glm::vec3 position, glm::vec3 color);
+    void addSpotLight(glm::vec3 position, glm::vec3 color, glm::vec3 focus, float limit);
+
+    std::string sceneInfoString();
 
 private:
 
@@ -52,7 +58,9 @@ private:
     float _mousey{0};
 
     Shader shader;
+
     std::vector<std::unique_ptr<Sphere>> spheres;
+    std::vector<Light> lights;
 
 };
 

@@ -19,9 +19,12 @@ public:
 
     unsigned precision();
     float radius();
+    unsigned triangles();
     glm::mat4& model();
 
     void translate(glm::vec3 vec);
+
+    virtual std::string infoString() = 0;
 
     ~Sphere() = default;
 

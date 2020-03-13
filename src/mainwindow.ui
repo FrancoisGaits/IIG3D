@@ -33,14 +33,15 @@
      <string>Info</string>
     </property>
     <addaction name="action_Version_OpenGL"/>
+    <addaction name="action_infoScene"/>
    </widget>
    <widget class="QMenu" name="menuShader">
     <property name="title">
      <string>Shaders</string>
     </property>
-    <addaction name="action_shaderLambert"/>
     <addaction name="action_shaderFacette"/>
     <addaction name="action_shaderErreur"/>
+    <addaction name="action_shaderLambert"/>
     <addaction name="action_shaderBlinnPhong"/>
    </widget>
    <widget class="QMenu" name="menu_scenes">
@@ -52,13 +53,27 @@
     <addaction name="actionGeo_Sphere"/>
     <addaction name="actionDemo"/>
    </widget>
+   <widget class="QMenu" name="menu_lights">
+    <property name="title">
+     <string>Lights</string>
+    </property>
+    <addaction name="action_basic"/>
+    <addaction name="action_3pointsC"/>
+    <addaction name="action_3points"/>
+   </widget>
    <addaction name="menu_scenes"/>
+   <addaction name="menu_lights"/>
    <addaction name="menuShader"/>
    <addaction name="menuInfo"/>
   </widget>
   <action name="action_Version_OpenGL">
    <property name="text">
-    <string>&amp;Version OpenGL</string>
+    <string>Version OpenGL</string>
+   </property>
+  </action>
+  <action name="action_infoScene">
+   <property name="text">
+    <string>Infos Scene</string>
    </property>
   </action>
   <action name="actionUV_Sphere">
@@ -98,7 +113,7 @@
     <string>Lambert</string>
    </property>
    <property name="toolTip">
-    <string>Use Lambert lightning</string>
+    <string>Use Lambert shader</string>
    </property>
   </action>
   <action name="action_shaderFacette">
@@ -106,7 +121,7 @@
     <string>Facette</string>
    </property>
    <property name="toolTip">
-    <string>Use Facette specific lightning</string>
+    <string>Use Facette specific shader</string>
    </property>
   </action>
   <action name="action_shaderErreur">
@@ -114,7 +129,7 @@
     <string>Erreur</string>
    </property>
    <property name="toolTip">
-    <string>Use error lightning</string>
+    <string>Use error shader</string>
    </property>
   </action>
   <action name="action_shaderBlinnPhong">
@@ -122,7 +137,31 @@
     <string>Blinn-Phong</string>
    </property>
    <property name="toolTip">
-    <string>Use Blinn-Phong lightning</string>
+    <string>Use Blinn-Phong shader</string>
+   </property>
+  </action>
+  <action name="action_basic">
+   <property name="text">
+    <string>Basic</string>
+   </property>
+   <property name="toolTip">
+    <string>Use Basic lightning</string>
+   </property>
+  </action>
+  <action name="action_3points">
+   <property name="text">
+    <string>3 points</string>
+   </property>
+   <property name="toolTip">
+    <string>Use 3 points lightning</string>
+   </property>
+  </action>
+  <action name="action_3pointsC">
+   <property name="text">
+    <string>3 points colored</string>
+   </property>
+   <property name="toolTip">
+    <string>Use colored 3 points lightning</string>
    </property>
   </action>
  </widget>
