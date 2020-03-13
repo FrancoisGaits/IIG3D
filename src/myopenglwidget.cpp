@@ -8,7 +8,7 @@
 #include <stdexcept>
 
 
-MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent), currFs(ERREUR), currPrec(1), currState(GEO), drawfill(true),
+MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent), currFs(BLINNPHONG), currPrec(1), currState(DEMO), drawfill(true),
                                                                         _scene(nullptr), _lastime(0){
 
 
@@ -124,7 +124,9 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
             resetScene();
         }
             break;
-
+        case Qt::Key_R:
+            resetScene();
+            break;
         // Other keys are transmitted to the scene
         default :
             if (_scene->keyboard(event->text().toStdString()[0]))
@@ -144,10 +146,10 @@ void MyOpenGLWidget::resetScene() {
     _scene = _sceneconstructor(width(), height());
     switch(currState) {
         case UV :
-            _scene->addUVSphere(0.4, currPrec, glm::vec3(0));
+            _scene->addUVSphere(0.35, currPrec, glm::vec3(0));
             break;
         case GEO :
-            _scene->addGeoSphere(0.4, currPrec, glm::vec3(0));
+            _scene->addGeoSphere(0.35, currPrec, glm::vec3(0));
             break;
         case DEMO:
             _scene->addGeoSphere(0.2, 2, glm::vec3(-0.7,0.2,-0.3));

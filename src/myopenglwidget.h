@@ -8,8 +8,8 @@
 #include <memory>
 
 #include "scene.h"
-#include "src/Sphere/GeoSphere.h"
-#include "src/Sphere/UVSphere.h"
+#include "src/Objects/GeoSphere.h"
+#include "src/Objects/UVSphere.h"
 #include "shaders.h"
 
 enum State {

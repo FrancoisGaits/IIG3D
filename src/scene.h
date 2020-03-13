@@ -4,8 +4,8 @@
 
 #include <vector>
 #include "opengl_stuff.h"
-#include "src/Sphere/UVSphere.h"
-#include "src/Sphere/GeoSphere.h"
+#include "src/Objects/UVSphere.h"
+#include "src/Objects/GeoSphere.h"
 #include "shaders.h"
 #include "camera/camera.h"
 

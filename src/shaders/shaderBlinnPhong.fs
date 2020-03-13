@@ -37,8 +37,11 @@ void main(void) {
 //    for (int i = 0; i < light_nb; i++) {
 //        result += calc_point_light(_point_lights[i], norm, fragPosWorld, view_dir);
 //    }
-    Point_Light light = Point_Light(vec3(3,3,0),vec3(1,1,1));
+    Point_Light light = Point_Light(vec3(1.5,1.5,0),vec3(1,1,1));
     result = calc_point_light(light, norm, fragPosWorld, view_dir);
+
+    Point_Light light2 = Point_Light(vec3(-1.5,1.5,0),vec3(0.5,0.5,0.2));
+    result += calc_point_light(light2, norm, fragPosWorld, view_dir);
 
     //color = vec4(result * _object_color, 1.0);
     color = vec4(result, 1.0);
