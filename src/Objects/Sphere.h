@@ -35,11 +35,10 @@ private:
     unsigned _precision;
     glm::vec3 _color;
 
-    // matrices
     glm::mat4 _model;
 
 protected:
-    // A simple geometry
+
     Mesh mesh;
 
 };

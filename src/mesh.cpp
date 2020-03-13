@@ -35,11 +35,11 @@ void Mesh::addNormal(float x, float y, float z) {
     normals.emplace_back(z);
 }
 
-unsigned Mesh::nbTriangles() {
+unsigned Mesh::nbTriangles() const {
     return indices.size() / 3;
 }
 
-unsigned Mesh::nbVertices() {
+unsigned Mesh::nbVertices() const {
     return vertices.size() / 3;
 }
 
@@ -71,7 +71,7 @@ void Mesh::load() {
     glBindVertexArray(0);
 }
 
-void Mesh::draw() {
+void Mesh::draw() const {
     glBindVertexArray(_vao);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);

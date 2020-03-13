@@ -64,6 +64,31 @@ void Scene::draw() {
 
         sphere->draw();
     }
+    for(const auto & model : models) {
+        shader.use();
+
+        std::cout << "A" << std::endl;
+
+        if (shader.fragmentShader() == ERREUR) {
+            shader.setInt("prec", 0);
+            shader.setFloat("radius", 1);
+        } else if (shader.fragmentShader() == BLINNPHONG) {
+            shader.setVec3("cameraPos", _camera->position());
+            shader.setInt("nbLight", lights.size());
+            shader.setVec3("objectColor", model.color());
+            int i = 0;
+            for(const auto & light :  lights) {
+                shader.setLight("lights["+std::to_string(i)+"]", light);
+                ++i;
+            }
+        }
+
+        shader.setMat4fv("model", model.model());
+        shader.setMat4fv("view", _view);
+        shader.setMat4fv("projection", _projection);
+
+        model.draw();
+    }
 
 }
 
@@ -110,6 +135,10 @@ std::string Scene::sceneInfoString() {
     for(const auto & light : lights) {
         mess << light.infoString();
     }
+    for(const auto & model : models) {
+        mess << model.infoString();
+    }
+
 
     return mess.str();
 }
@@ -122,5 +151,12 @@ void Scene::addGeoSphere(float radius, unsigned precision, glm::vec3 position, g
 void Scene::addUVSphere(float radius, unsigned precision, glm::vec3 position, glm::vec3 color) {
     spheres.emplace_back(new UVSphere(radius, precision, color));
     spheres.back()->translate(position);
+}
+
+void Scene::addModel(const char * path, glm::vec3 position, glm::vec3 color) {
+    std::string p(path);
+    models.emplace_back(Model(p, color));
+    //models.back().translate(position);
+
 }
 

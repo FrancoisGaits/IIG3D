@@ -38,4 +38,4 @@ private:
 
 
 
-#endif //IIG3D_LIGHT_H
+#endif

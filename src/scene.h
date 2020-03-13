@@ -9,6 +9,7 @@
 #include "src/Objects/Light.h"
 #include "shaders.h"
 #include "camera/camera.h"
+#include "Objects/Model.h"
 
 
 /** Simple class for managing an OpenGL demo
@@ -33,6 +34,8 @@ public:
 
     void addPointLight(glm::vec3 position, glm::vec3 color);
     void addSpotLight(glm::vec3 position, glm::vec3 color, glm::vec3 focus, float limit);
+
+    void addModel(const char * path, glm::vec3 position, glm::vec3 color = glm::vec3(1));
 
     std::string sceneInfoString();
 
@@ -61,7 +64,9 @@ private:
     Shader shader;
 
     std::vector<std::unique_ptr<Sphere>> spheres;
+    std::vector<Model> models;
     std::vector<Light> lights;
+
 
 };
 

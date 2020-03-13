@@ -39,13 +39,13 @@ public:
 
     void addNormal(float x, float y, float z);
 
-    unsigned nbTriangles();
+    unsigned nbTriangles() const;
 
-    unsigned nbVertices();
+    unsigned nbVertices() const;
 
     void load();
 
-    void draw();
+    void draw() const;
 
     void clear();
 
