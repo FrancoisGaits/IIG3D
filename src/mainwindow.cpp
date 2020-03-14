@@ -25,7 +25,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     openglWidget->setFocus();
 
     setCentralWidget(openglWidget);
-
 }
 
 MainWindow::~MainWindow() {
@@ -47,15 +46,15 @@ void MainWindow::on_action_infoScene_triggered() {
 }
 
 void MainWindow::on_action_shaderLambert_triggered() {
-  openglWidget->switchFragmentShader(LAMBERT);
+    openglWidget->switchFragmentShader(LAMBERT);
 }
 
 void MainWindow::on_action_shaderFacette_triggered() {
-  openglWidget->switchFragmentShader(FACETTE);
+    openglWidget->switchFragmentShader(FACETTE);
 }
 
 void MainWindow::on_action_shaderErreur_triggered() {
-  openglWidget->switchFragmentShader(ERREUR);
+    openglWidget->switchFragmentShader(ERREUR);
 }
 
 void MainWindow::on_action_shaderBlinnPhong_triggered() {

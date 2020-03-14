@@ -29,15 +29,15 @@ enum Lighting {
 class MyOpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_4_1_Core {
 
 public:
-    explicit MyOpenGLWidget(QWidget *parent = 0);
+    explicit MyOpenGLWidget(QWidget *parent = nullptr);
 
-    ~MyOpenGLWidget();
+    ~MyOpenGLWidget() final;
 
     // size hints for the widget
     QSize minimumSizeHint() const override;
+
     QSize sizeHint() const override;
 
-    // Demo management
     void resetScene();
 
     void switchFragmentShader(FragmentShader fs);
@@ -47,6 +47,7 @@ public:
     std::string sceneInfoString();
 
 public slots:
+
     void cleanup();
 
 protected:
@@ -58,7 +59,6 @@ protected:
     // Event management
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
-
     void keyPressEvent(QKeyEvent *event) override;
 
 private :
@@ -68,11 +68,11 @@ private :
     Lighting currLight;
     bool drawfill;
 
-    Scene * _scene;
+    Scene *_scene;
 
-    using SceneConstructors=std::function<Scene*(int, int)>;
+    using SceneConstructors=std::function<Scene *(int, int)>;
     SceneConstructors _sceneconstructor;
-    
+
     // for event management
     std::int64_t _lastime;
 };

@@ -3,8 +3,8 @@
 
 
 Scene::Scene(int width, int height, FragmentShader fs, VertexShader vs) :
-                                                                    _width(width), _height(height),
-                                                                    _activecamera(1), shader(vs, fs) {
+        _width(width), _height(height),
+        _activecamera(1), shader(vs, fs) {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
@@ -21,17 +21,19 @@ Scene::Scene(int width, int height, FragmentShader fs, VertexShader vs) :
     _view = _camera->viewmatrix();
 
     _projection = glm::perspective(_camera->zoom(), float(_width) / _height, 0.1f, 100.0f);
-
 }
 
 Scene::~Scene() {
+    spheres.clear();
+    lights.clear();
+    models.clear();
 }
 
 void Scene::resize(int width, int height) {
-   _width = width;
-   _height = height;
-   _camera->setviewport(glm::vec4(0.f, 0.f, _width, _height));
-   _projection = glm::perspective(_camera->zoom(), float(_width) / _height, 0.1f, 100.0f);
+    _width = width;
+    _height = height;
+    _camera->setviewport(glm::vec4(0.f, 0.f, _width, _height));
+    _projection = glm::perspective(_camera->zoom(), float(_width) / _height, 0.1f, 100.0f);
 }
 
 void Scene::draw() {
@@ -41,7 +43,7 @@ void Scene::draw() {
 
     _view = _camera->viewmatrix();
 
-    for(const auto & sphere : spheres) {
+    for (const auto &sphere : spheres) {
         shader.use();
 
         if (shader.fragmentShader() == ERREUR) {
@@ -52,8 +54,8 @@ void Scene::draw() {
             shader.setInt("nbLight", lights.size());
             shader.setVec3("objectColor", sphere->color());
             int i = 0;
-            for(const auto & light :  lights) {
-                shader.setLight("lights["+std::to_string(i)+"]", light);
+            for (const auto &light :  lights) {
+                shader.setLight("lights[" + std::to_string(i) + "]", light);
                 ++i;
             }
         }
@@ -64,7 +66,7 @@ void Scene::draw() {
 
         sphere->draw();
     }
-    for(const auto & model : models) {
+    for (const auto &model : models) {
         shader.use();
 
         if (shader.fragmentShader() == ERREUR) {
@@ -75,8 +77,8 @@ void Scene::draw() {
             shader.setInt("nbLight", lights.size());
             shader.setVec3("objectColor", model->color());
             int i = 0;
-            for(const auto & light :  lights) {
-                shader.setLight("lights["+std::to_string(i)+"]", light);
+            for (const auto &light :  lights) {
+                shader.setLight("lights[" + std::to_string(i) + "]", light);
                 ++i;
             }
         }
@@ -127,13 +129,13 @@ void Scene::addSpotLight(glm::vec3 position, glm::vec3 color, glm::vec3 focus, f
 
 std::string Scene::sceneInfoString() {
     std::stringstream mess;
-    for(const auto & sphere : spheres) {
+    for (const auto &sphere : spheres) {
         mess << sphere->infoString();
     }
-    for(const auto & light : lights) {
+    for (const auto &light : lights) {
         mess << light.infoString();
     }
-    for(const auto & model : models) {
+    for (const auto &model : models) {
         mess << model->infoString();
     }
 
@@ -151,7 +153,7 @@ void Scene::addUVSphere(float radius, unsigned precision, glm::vec3 position, gl
     spheres.back()->translate(position);
 }
 
-void Scene::addModel(const char * path, glm::vec3 position, glm::vec3 color, unsigned div) {
+void Scene::addModel(const char *path, glm::vec3 position, glm::vec3 color, unsigned div) {
     std::string p(path);
     models.emplace_back(new Model(p, color, div));
     models.back()->translate(position);

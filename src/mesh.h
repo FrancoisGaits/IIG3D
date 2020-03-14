@@ -1,5 +1,5 @@
-#ifndef IIG3D_BASETP_MESH_H
-#define IIG3D_BASETP_MESH_H
+#ifndef IIG3D_MESH_H
+#define IIG3D_MESH_H
 
 #ifdef __APPLE__
 #include <OpenGL/gl3.h>
@@ -16,34 +16,21 @@
 #include <vector>
 
 class Mesh {
-private :
-    // OpenGL object for geometry
-    GLuint _vao;
-    GLuint _vbo;
-    GLuint _nbo;
-    GLuint _ebo;
-
-
 public:
     std::vector<GLfloat> vertices;
     std::vector<GLfloat> normals;
     std::vector<GLuint> indices;
 
     void addQuad(unsigned a, unsigned b, unsigned c, unsigned d);
-
     void addTri(unsigned a, unsigned b, unsigned c);
-
     void addVertex(float x, float y, float z);
-
-    void addVertex(glm::vec3& v);
-
+    void addVertex(glm::vec3 &v);
     void addNormal(float x, float y, float z);
 
     unsigned nbTriangles() const;
-
     unsigned nbVertices() const;
-
     unsigned nbNormals() const;
+    float volume() const;
 
     void load();
 
@@ -53,7 +40,13 @@ public:
 
     ~Mesh();
 
+private :
+    GLuint _vao;
+    GLuint _vbo;
+    GLuint _nbo;
+    GLuint _ebo;
+
 };
 
 
-#endif //IIG3D_BASETP_MESH_H
+#endif

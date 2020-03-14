@@ -3,9 +3,10 @@
 #include <sstream>
 
 
-GeoSphere::GeoSphere(float radius, unsigned precision, glm::vec3 color) : Sphere(radius, static_cast<unsigned>(pow(3.5,precision-1)+1), color) {
+GeoSphere::GeoSphere(float radius, unsigned precision, glm::vec3 color) : Sphere(radius, static_cast<unsigned>(
+        pow(3.5, precision - 1) + 1), color) {
 
-    mesh = generateSphereAttributes(radius, precision-1);
+    mesh = generateSphereAttributes(radius, precision - 1);
 
     mesh.load();
 }
@@ -119,5 +120,5 @@ std::string GeoSphere::infoString() {
     mess << "    -precision : " << precision() << std::endl;
     mess << "    -radius : " << radius() << std::endl;
     mess << "    -triangles : " << triangles() << std::endl;
-    return  mess.str();
+    return mess.str();
 }

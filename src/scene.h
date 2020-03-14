@@ -18,9 +18,11 @@ class Scene {
 
 public:
     explicit Scene(int width, int height, FragmentShader fs, VertexShader vs = VERTEX);
+
     virtual ~Scene();
 
     virtual void resize(int width, int height);
+
     virtual void draw();
 
     virtual void mouseclick(int button, float xpos, float ypos);
@@ -29,19 +31,15 @@ public:
     virtual bool keyboard(unsigned char k);
 
     void addGeoSphere(float radius, unsigned precision, glm::vec3 position, glm::vec3 color = glm::vec3(1));
-
     void addUVSphere(float radius, unsigned precision, glm::vec3 position, glm::vec3 color = glm::vec3(1));
-
     void addPointLight(glm::vec3 position, glm::vec3 color);
     void addSpotLight(glm::vec3 position, glm::vec3 color, glm::vec3 focus, float limit);
-
-    void addModel(const char * path, glm::vec3 position, glm::vec3 color = glm::vec3(1), unsigned div = 2000);
+    void addModel(const char *path, glm::vec3 position, glm::vec3 color = glm::vec3(1), unsigned div = 2000);
 
     std::string sceneInfoString();
 
 private:
 
-    // Width and heigth of the viewport
     int _width;
     int _height;
 
@@ -49,15 +47,13 @@ private:
     glm::mat4 _view;
     glm::mat4 _projection;
 
-    // Camera
     using CameraSelector=std::function<Camera *()>;
     std::vector<CameraSelector> _cameraselector;
     unsigned int _activecamera;
 
     std::unique_ptr<Camera> _camera;
 
-    // for mouse management
-    int _button; // 0 --> left. 1 --> right. 2 --> middle. 3 --> other
+    int _button;
     float _mousex{0};
     float _mousey{0};
 
@@ -66,9 +62,6 @@ private:
     std::vector<std::unique_ptr<Sphere>> spheres;
     std::vector<std::unique_ptr<Model>> models;
     std::vector<Light> lights;
-
-
 };
 
-
-#endif // SCENE_H
+#endif

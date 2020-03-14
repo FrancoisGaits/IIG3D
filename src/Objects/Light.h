@@ -12,14 +12,16 @@ enum LightType {
 
 class Light {
 public:
-    explicit Light(LightType type, glm::vec3 position, glm::vec3 color, glm::vec3 focus = glm::vec3(0)
-            , float limit = .9f);
+    explicit Light(LightType type, glm::vec3 position, glm::vec3 color, glm::vec3 focus = glm::vec3(0),
+                   float limit = .9f);
 
-    const glm::vec3 & position() const;
-    const glm::vec3 & color() const;
-    const glm::vec3 & focus() const;
+    const glm::vec3 &position() const;
+    const glm::vec3 &color() const;
+    const glm::vec3 &focus() const;
+
     float limit() const;
     LightType type() const;
+
 
     bool isSpot() const;
 
@@ -34,8 +36,6 @@ private:
     glm::vec3 _focus;
     float _limit;
 };
-
-
 
 
 #endif

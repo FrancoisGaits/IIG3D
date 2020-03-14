@@ -42,7 +42,7 @@ vec3 calc_light(Light light, vec3 normal, vec3 frag_pos, vec3 view_dir) {
         float spec = pow(max(dot(view_dir, reflect_dir), 0.0), 16);
         vec3 specular = specular_strength * spec * light.color;
 
-        return (ambient + diffuse + specular) * ((1.0 - (1.0 - spotFactor) * 1.0/(1.0 - light.limit))) ;
+        return (ambient + diffuse + specular) * ((1.0 - (1.0 - spotFactor) * 1.0/(1.0 - light.limit)));
     }
     else {
         return vec3(0);
@@ -53,7 +53,7 @@ void main(void) {
     vec3 norm = normalize(normal);
     vec3 view_dir = normalize(cameraPos - fragPosWorld);
 
-    vec3 result = vec3(0,0,0);
+    vec3 result = vec3(0, 0, 0);
 
     int light_nb = nbLight;
     if (nbLight > N_MAX_LIGHT) {

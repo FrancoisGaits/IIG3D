@@ -79,10 +79,10 @@ class EulerCamera : public Camera {
 public:
 
     // Constructor with vectors (default constructor)
-    EulerCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
+    explicit EulerCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
                 GLfloat yaw = YAW, GLfloat pitch = PITCH);
 
-    ~EulerCamera();
+    ~EulerCamera() final;
 
     // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void processkeyboard(Camera_Movement direction, GLfloat deltaTime) override;
@@ -115,10 +115,10 @@ private:
 
 class TrackballCamera : public Camera {
 public:
-    TrackballCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
+    explicit TrackballCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
                     glm::vec3 center = glm::vec3(0.0f, 0.0f, -1.0f));
 
-    ~TrackballCamera();
+    ~TrackballCamera() final;
 
     // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void processkeyboard(Camera_Movement direction, GLfloat deltaTime) override;
@@ -148,11 +148,9 @@ private:
     glm::vec2 _panend;
 
     glm::vec3 getmouseprojectiononball(float xpos, float ypos);
-
     glm::vec2 getmouseonscreen(float xpos, float ypos);
 
     void rotatecamera();
-
     void pancamera();
 };
 

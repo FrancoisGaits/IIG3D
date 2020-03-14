@@ -6,8 +6,10 @@
 #include <OpenGL/gl3ext.h>
 #else
 #define GL_GLEXT_PROTOTYPES 1
+
 #include <GL/gl.h>
 #include <GL/glext.h>
+
 #endif
 
 #include <glm/glm.hpp>

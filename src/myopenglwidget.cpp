@@ -8,8 +8,9 @@
 #include <stdexcept>
 
 
-MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent), currFs(BLINNPHONG), currPrec(1), currState(MODEL), currLight(THREE), drawfill(true),
-                                                                        _scene(nullptr), _lastime(0){
+MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent), currFs(BLINNPHONG), currPrec(1),
+                                                  currState(DEMO), currLight(THREE), drawfill(true),
+                                                  _scene(nullptr), _lastime(0) {
 
 
     _sceneconstructor = ([this](int width, int height) -> Scene * {
@@ -40,7 +41,7 @@ void MyOpenGLWidget::cleanup() {
 
 void MyOpenGLWidget::initializeGL() {
     connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &MyOpenGLWidget::cleanup);
-    
+
     if (!initializeOpenGLFunctions()) {
         QMessageBox::critical(this, "OpenGL initialization error",
                               "MyOpenGLWidget::initializeGL() : Unable to initialize OpenGL functions");
@@ -115,7 +116,7 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
             resetScene();
         }
             break;
-        case Qt::Key_V:{
+        case Qt::Key_V: {
             if (currPrec < 30) {
                 ++currPrec;
             } else {
@@ -127,7 +128,7 @@ void MyOpenGLWidget::keyPressEvent(QKeyEvent *event) {
         case Qt::Key_R:
             resetScene();
             break;
-        // Other keys are transmitted to the scene
+            // Other keys are transmitted to the scene
         default :
             if (_scene->keyboard(event->text().toStdString()[0]))
                 update();
@@ -143,8 +144,9 @@ void MyOpenGLWidget::switchState(State s) {
 
 void MyOpenGLWidget::resetScene() {
     makeCurrent();
+    delete _scene;
     _scene = _sceneconstructor(width(), height());
-    switch(currState) {
+    switch (currState) {
         case UV :
             _scene->addUVSphere(0.35, currPrec, glm::vec3(0));
             break;
@@ -152,22 +154,22 @@ void MyOpenGLWidget::resetScene() {
             _scene->addGeoSphere(0.35, currPrec, glm::vec3(0));
             break;
         case DEMO:
-            _scene->addGeoSphere(0.2, 2, glm::vec3(-0.6,0.,-0.3));
-            _scene->addUVSphere(0.4, 4, glm::vec3(0.1,-0.2,-0.8));
-            _scene->addUVSphere(2, 2, glm::vec3(0.6,0.3,-4));
+            _scene->addGeoSphere(0.2, 2, glm::vec3(-0.6, 0., -0.3));
+            _scene->addUVSphere(0.4, 4, glm::vec3(0.1, -0.2, -0.8));
+            _scene->addUVSphere(2, 2, glm::vec3(0.6, 0.3, -4));
 
-            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3,-0.3,-0.2),glm::vec3(0.5,0,0));
-            _scene->addGeoSphere(0.1, 3, glm::vec3(-0.1,-0.3,0.2), glm::vec3(0,0.5,0));
-            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3,0.3,0.2), glm::vec3(0,0,0.5));
-            _scene->addGeoSphere(0.1, 3, glm::vec3(-0.1,0.3,-0.2));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3, -0.3, -0.2), glm::vec3(0.5, 0, 0));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(-0.1, -0.3, 0.2), glm::vec3(0, 0.5, 0));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3, 0.3, 0.2), glm::vec3(0, 0, 0.5));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(-0.1, 0.3, -0.2));
 
             break;
         case MODEL:
-            _scene->addModel("aya3.obj", glm::vec3(-0.1,-0.35,0), glm::vec3(1), 2000);
-            _scene->addModel("Palm.obj", glm::vec3(-0.3,-0.35,0.2), glm::vec3(0.2,0.5,0.1), 75);
-            _scene->addModel("Palm.obj", glm::vec3(0.1,-0.35,-0.1), glm::vec3(0.2,0.5,0.1), 75);
-            _scene->addModel("Palm.obj", glm::vec3(0.4,-0.35,0.1), glm::vec3(0.2,0.5,0.1), 75);
-            _scene->addModel("Palm.obj", glm::vec3(-0.4,-0.35,-0.3), glm::vec3(0.2,0.5,0.1), 75);
+            _scene->addModel("aya3.obj", glm::vec3(-0.1, -0.35, 0), glm::vec3(1), 2000);
+            _scene->addModel("Palm.obj", glm::vec3(-0.3, -0.35, 0.2), glm::vec3(0.2, 0.5, 0.1), 75);
+            _scene->addModel("Palm.obj", glm::vec3(0.1, -0.35, -0.1), glm::vec3(0.2, 0.5, 0.1), 75);
+            _scene->addModel("Palm.obj", glm::vec3(0.4, -0.35, 0.1), glm::vec3(0.2, 0.5, 0.1), 75);
+            _scene->addModel("Palm.obj", glm::vec3(-0.4, -0.35, -0.3), glm::vec3(0.2, 0.5, 0.1), 75);
             break;
 
         case CLEAR:
@@ -176,18 +178,18 @@ void MyOpenGLWidget::resetScene() {
     }
     switch (currLight) {
         case THREE :
-            _scene->addSpotLight(glm::vec3(-1.5f,0.5f,1.f), glm::vec3(1.f), glm::vec3(0,0,-0.5), 0.88);
-            _scene->addSpotLight(glm::vec3(2.f,0.5f,1.f), glm::vec3(0.15f), glm::vec3(0,0,-0.5), 0.85);
-            _scene->addSpotLight(glm::vec3(0.f,1.5f,-3.f), glm::vec3(.65f), glm::vec3(0,0,-0.5), 0.8);
+            _scene->addSpotLight(glm::vec3(-1.5f, 0.5f, 1.f), glm::vec3(1.f), glm::vec3(0, 0, -0.5), 0.88);
+            _scene->addSpotLight(glm::vec3(2.f, 0.5f, 1.f), glm::vec3(0.15f), glm::vec3(0, 0, -0.5), 0.85);
+            _scene->addSpotLight(glm::vec3(0.f, 1.5f, -3.f), glm::vec3(.65f), glm::vec3(0, 0, -0.5), 0.8);
             break;
         case THREEC :
-            _scene->addSpotLight(glm::vec3(-1.5f,0.5f,1.f), glm::vec3(1.f,0,0), glm::vec3(0,0,-0.5), 0.88);
-            _scene->addSpotLight(glm::vec3(2.f,0.5f,1.f), glm::vec3(0,0.15f,0), glm::vec3(0,0,-0.5), 0.85);
-            _scene->addSpotLight(glm::vec3(0.f,1.5f,-3.f), glm::vec3(0,0,.65f), glm::vec3(0,0,-0.5), 0.8);
+            _scene->addSpotLight(glm::vec3(-1.5f, 0.5f, 1.f), glm::vec3(1.f, 0, 0), glm::vec3(0, 0, -0.5), 0.88);
+            _scene->addSpotLight(glm::vec3(2.f, 0.5f, 1.f), glm::vec3(0, 0.15f, 0), glm::vec3(0, 0, -0.5), 0.85);
+            _scene->addSpotLight(glm::vec3(0.f, 1.5f, -3.f), glm::vec3(0, 0, .65f), glm::vec3(0, 0, -0.5), 0.8);
             break;
         case BASIC :
         default:
-            _scene->addPointLight(glm::vec3(1.5),glm::vec3(1));
+            _scene->addPointLight(glm::vec3(1.5), glm::vec3(1));
     }
     doneCurrent();
     update();

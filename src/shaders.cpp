@@ -84,17 +84,17 @@ void Shader::use() {
 }
 
 
-void Shader::setLight(const std::string &name, const Light & light) const {
-    setInt(name+".type", light.type());
-    setVec3(name+".position", light.position());
-    setVec3(name+".color", light.color());
-    setVec3(name+".focus", light.focus());
-    setFloat(name+".limit", light.limit());
+void Shader::setLight(const std::string &name, const Light &light) const {
+    setInt(name + ".type", light.type());
+    setVec3(name + ".position", light.position());
+    setVec3(name + ".color", light.color());
+    setVec3(name + ".focus", light.focus());
+    setFloat(name + ".limit", light.limit());
 }
 
 void Shader::setBool(const std::string &name, bool value) const {
     int loc = glGetUniformLocation(ID, name.c_str());
-    if(loc >= 0)
+    if (loc >= 0)
         glUniform1i(loc, (int) value);
     else
         std::cerr << "Unable to locate '" << name << "' Uniform in shader : " << ID << std::endl;
@@ -102,7 +102,7 @@ void Shader::setBool(const std::string &name, bool value) const {
 
 void Shader::setInt(const std::string &name, int value) const {
     int loc = glGetUniformLocation(ID, name.c_str());
-    if(loc >= 0)
+    if (loc >= 0)
         glUniform1i(loc, value);
     else
         std::cerr << "Unable to locate '" << name << "' Uniform in shader : " << ID << std::endl;
@@ -110,7 +110,7 @@ void Shader::setInt(const std::string &name, int value) const {
 
 void Shader::setFloat(const std::string &name, float value) const {
     int loc = glGetUniformLocation(ID, name.c_str());
-    if(loc >= 0)
+    if (loc >= 0)
         glUniform1f(loc, value);
     else
         std::cerr << "Unable to locate '" << name << "' Uniform in shader : " << ID << std::endl;
@@ -118,7 +118,7 @@ void Shader::setFloat(const std::string &name, float value) const {
 
 void Shader::setMat4fv(const std::string &name, const glm::mat4 &value) const {
     int loc = glGetUniformLocation(ID, name.c_str());
-    if(loc >= 0)
+    if (loc >= 0)
         glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(value));
     else
         std::cerr << "Unable to locate '" << name << "' Uniform in shader : " << ID << std::endl;
@@ -126,7 +126,7 @@ void Shader::setMat4fv(const std::string &name, const glm::mat4 &value) const {
 
 void Shader::setVec3(const std::string &name, const glm::vec3 &value) const {
     int loc = glGetUniformLocation(ID, name.c_str());
-    if(loc >= 0)
+    if (loc >= 0)
         glUniform3f(loc, value.x, value.y, value.z);
     else
         std::cerr << "Unable to locate '" << name << "' Uniform in shader : " << ID << std::endl;
@@ -142,7 +142,7 @@ VertexShader Shader::vertexShader() {
 
 
 std::string Shader::getFragmentShaderPath() {
-    switch(_fragmentShader) {
+    switch (_fragmentShader) {
         case LAMBERT :
             return _basePath + "shaderLambert.fs";
         case FACETTE :
@@ -157,7 +157,7 @@ std::string Shader::getFragmentShaderPath() {
 }
 
 std::string Shader::getVertexShaderPath() {
-    switch(_vertexShader) {
+    switch (_vertexShader) {
         case VERTEX :
             return _basePath + "shader.vs";
         default:

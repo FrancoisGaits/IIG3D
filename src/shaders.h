@@ -36,6 +36,25 @@ enum VertexShader {
 
 
 class Shader {
+public:
+    Shader(VertexShader vs, FragmentShader fs);
+
+    std::string getFragmentShaderPath();
+    std::string getVertexShaderPath();
+    FragmentShader fragmentShader();
+    VertexShader vertexShader();
+
+    void use();
+
+    void setLight(const std::string &name, const Light &light) const;
+    void setBool(const std::string &name, bool value) const;
+    void setInt(const std::string &name, int value) const;
+    void setFloat(const std::string &name, float value) const;
+    void setVec3(const std::string &name, const glm::vec3 &value) const;
+    void setMat4fv(const std::string &name, const glm::mat4 &value) const;
+
+    ~Shader();
+
 private:
     unsigned int ID;
 
@@ -43,34 +62,6 @@ private:
     FragmentShader _fragmentShader;
 
     std::string _basePath = "../src/shaders/";
-
-
-public:
-    Shader(VertexShader vs, FragmentShader fs);
-
-    std::string getFragmentShaderPath();
-
-    std::string getVertexShaderPath();
-
-    FragmentShader fragmentShader();
-    VertexShader vertexShader();
-
-    void use();
-
-    void setLight(const std::string &name, const Light &light) const;
-
-    void setBool(const std::string &name, bool value) const;
-
-    void setInt(const std::string &name, int value) const;
-
-    void setFloat(const std::string &name, float value) const;
-
-    void setVec3(const std::string &name, const glm::vec3 &value) const;
-
-    void setMat4fv(const std::string &name, const glm::mat4 &value) const;
-
-    ~Shader();
-
 };
 
 

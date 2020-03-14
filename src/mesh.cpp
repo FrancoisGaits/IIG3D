@@ -93,3 +93,28 @@ Mesh::~Mesh() {
     glDeleteBuffers(1, &_ebo);
     glDeleteVertexArrays(1, &_vao);
 }
+
+float Mesh::volume() const {
+    float vol = 0;
+    for(unsigned i = 0; i<nbTriangles();++i) {
+        unsigned id1 = indices[3*i];
+        unsigned id2 = indices[3*i+1];
+        unsigned id3 = indices[3*i+2];
+
+        float x1 = vertices[3*id1];
+        float y1 = vertices[3*id1+1];
+        float z1 = vertices[3*id1+2];
+
+        float x2 = vertices[3*id2];
+        float y2 = vertices[3*id2+1];
+        float z2 = vertices[3*id2+2];
+
+        float x3 = vertices[3*id3];
+        float y3 = vertices[3*id3+1];
+        float z3 = vertices[3*id3+2];
+
+        vol += (x1*y2*z3 + x2*y3*z1 + x3*y1*z2 - x1*y3*z2 - x2*y1*z3 - x3*y2*z1);
+    }
+
+    return vol/6;
+}

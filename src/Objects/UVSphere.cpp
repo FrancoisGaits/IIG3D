@@ -2,7 +2,7 @@
 #include <iostream>
 #include <sstream>
 
-UVSphere::UVSphere(float radius, unsigned precision, glm::vec3 color) : Sphere(radius, precision, color){
+UVSphere::UVSphere(float radius, unsigned precision, glm::vec3 color) : Sphere(radius, precision, color) {
     mesh = generateSphereAttributes(radius, precision);
 
     mesh.load();
@@ -65,7 +65,7 @@ Mesh UVSphere::generateSphereAttributes(float radius, unsigned precision) {
                 unsigned b = (meri == nbMeridians ? 1 : meri + 1) + dec;                            // |    \       |
                 unsigned c = meri + nbMeridians + dec;                                              // |       \    |
                 unsigned d = (meri == nbMeridians ? nbMeridians + 1 : meri + nbMeridians + 1) + dec;// |          \ |
-                                                                                                    // d------------c
+                // d------------c
                 mesh.addQuad(a, b, c, d);
             }
         }
@@ -80,5 +80,5 @@ std::string UVSphere::infoString() {
     mess << "    -precision : " << precision() << std::endl;
     mess << "    -radius : " << radius() << std::endl;
     mess << "    -triangles : " << triangles() << std::endl;
-    return  mess.str();
+    return mess.str();
 }

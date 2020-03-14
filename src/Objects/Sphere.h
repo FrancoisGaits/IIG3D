@@ -19,6 +19,7 @@ public:
 
     unsigned precision();
     float radius();
+    float volume();
     glm::vec3& color();
     unsigned triangles();
     glm::mat4& model();
