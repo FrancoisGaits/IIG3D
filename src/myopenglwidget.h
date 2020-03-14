@@ -16,6 +16,7 @@ enum State {
     CLEAR,
     UV,
     GEO,
+    MODEL,
     DEMO
 };
 

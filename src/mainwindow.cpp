@@ -90,3 +90,7 @@ void MainWindow::on_actionDemo_triggered() {
     openglWidget->switchState(DEMO);
 }
 
+void MainWindow::on_actionModel_triggered() {
+    openglWidget->switchState(MODEL);
+}
+

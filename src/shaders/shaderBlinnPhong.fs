@@ -20,29 +20,6 @@ uniform int nbLight;
 
 uniform Light lights[N_MAX_LIGHT];
 
-// Functions
-vec3 calc_light(Light light, vec3 normal, vec3 frag_pos, vec3 view_dir);
-
-void main(void) {
-    vec3 norm = normalize(normal);
-    vec3 view_dir = normalize(cameraPos - fragPosWorld);
-
-    vec3 result = vec3(0,0,0);
-
-    // Limits lights number
-    int light_nb = nbLight;
-    if (nbLight > N_MAX_LIGHT) {
-        light_nb = N_MAX_LIGHT;
-    }
-
-    // Compute light impact
-    for (int i = 0; i < light_nb; i++) {
-        result += calc_light(lights[i], norm, fragPosWorld, view_dir);
-    }
-
-    color = vec4(result * objectColor, 1.0);
-}
-
 vec3 calc_light(Light light, vec3 normal, vec3 frag_pos, vec3 view_dir) {
 
     float ambient_amp = 0.1;
@@ -70,4 +47,22 @@ vec3 calc_light(Light light, vec3 normal, vec3 frag_pos, vec3 view_dir) {
     else {
         return vec3(0);
     }
+}
+
+void main(void) {
+    vec3 norm = normalize(normal);
+    vec3 view_dir = normalize(cameraPos - fragPosWorld);
+
+    vec3 result = vec3(0,0,0);
+
+    int light_nb = nbLight;
+    if (nbLight > N_MAX_LIGHT) {
+        light_nb = N_MAX_LIGHT;
+    }
+
+    for (int i = 0; i < light_nb; i++) {
+        result += calc_light(lights[i], norm, fragPosWorld, view_dir);
+    }
+
+    color = vec4(result * objectColor, 1.0);
 }

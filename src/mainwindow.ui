@@ -52,6 +52,7 @@
     <addaction name="actionUV_Sphere"/>
     <addaction name="actionGeo_Sphere"/>
     <addaction name="actionDemo"/>
+    <addaction name="actionModel"/>
    </widget>
    <widget class="QMenu" name="menu_lights">
     <property name="title">
@@ -106,6 +107,14 @@
    </property>
    <property name="toolTip">
     <string>Display Demo</string>
+   </property>
+  </action>
+  <action name="actionModel">
+   <property name="text">
+    <string>Model</string>
+   </property>
+   <property name="toolTip">
+    <string>Display Model</string>
    </property>
   </action>
   <action name="action_shaderLambert">

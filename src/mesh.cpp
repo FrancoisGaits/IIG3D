@@ -43,6 +43,10 @@ unsigned Mesh::nbVertices() const {
     return vertices.size() / 3;
 }
 
+unsigned Mesh::nbNormals() const {
+    return normals.size() / 3;
+}
+
 void Mesh::load() {
     // Initialize the geometry
     // 1. Generate geometry buffers

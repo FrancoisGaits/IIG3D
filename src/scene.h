@@ -35,7 +35,7 @@ public:
     void addPointLight(glm::vec3 position, glm::vec3 color);
     void addSpotLight(glm::vec3 position, glm::vec3 color, glm::vec3 focus, float limit);
 
-    void addModel(const char * path, glm::vec3 position, glm::vec3 color = glm::vec3(1));
+    void addModel(const char * path, glm::vec3 position, glm::vec3 color = glm::vec3(1), unsigned div = 2000);
 
     std::string sceneInfoString();
 
@@ -64,7 +64,7 @@ private:
     Shader shader;
 
     std::vector<std::unique_ptr<Sphere>> spheres;
-    std::vector<Model> models;
+    std::vector<std::unique_ptr<Model>> models;
     std::vector<Light> lights;
 
 

@@ -43,6 +43,8 @@ public:
 
     unsigned nbVertices() const;
 
+    unsigned nbNormals() const;
+
     void load();
 
     void draw() const;

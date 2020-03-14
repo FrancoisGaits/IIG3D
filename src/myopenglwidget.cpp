@@ -8,7 +8,7 @@
 #include <stdexcept>
 
 
-MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent), currFs(BLINNPHONG), currPrec(1), currState(DEMO), currLight(THREE), drawfill(true),
+MyOpenGLWidget::MyOpenGLWidget(QWidget *parent) : QOpenGLWidget(parent), currFs(BLINNPHONG), currPrec(1), currState(MODEL), currLight(THREE), drawfill(true),
                                                                         _scene(nullptr), _lastime(0){
 
 
@@ -152,16 +152,22 @@ void MyOpenGLWidget::resetScene() {
             _scene->addGeoSphere(0.35, currPrec, glm::vec3(0));
             break;
         case DEMO:
-//            _scene->addGeoSphere(0.2, 2, glm::vec3(-0.6,0.,-0.3));
-//            _scene->addUVSphere(0.4, 4, glm::vec3(0.1,-0.2,-0.8));
-//            _scene->addUVSphere(2, 2, glm::vec3(0.6,0.3,-4));
-//
-//            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3,-0.3,-0.2),glm::vec3(0.5,0,0));
-//            _scene->addGeoSphere(0.1, 3, glm::vec3(-0.1,-0.3,0.2), glm::vec3(0,0.5,0));
-//            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3,0.3,0.2), glm::vec3(0,0,0.5));
-//            _scene->addGeoSphere(0.1, 3, glm::vec3(-0.1,0.3,-0.2));
+            _scene->addGeoSphere(0.2, 2, glm::vec3(-0.6,0.,-0.3));
+            _scene->addUVSphere(0.4, 4, glm::vec3(0.1,-0.2,-0.8));
+            _scene->addUVSphere(2, 2, glm::vec3(0.6,0.3,-4));
 
-            _scene->addModel("tri.obj", glm::vec3(0), glm::vec3(0.8,0.2,0.5));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3,-0.3,-0.2),glm::vec3(0.5,0,0));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(-0.1,-0.3,0.2), glm::vec3(0,0.5,0));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(0.3,0.3,0.2), glm::vec3(0,0,0.5));
+            _scene->addGeoSphere(0.1, 3, glm::vec3(-0.1,0.3,-0.2));
+
+            break;
+        case MODEL:
+            _scene->addModel("aya3.obj", glm::vec3(-0.1,-0.35,0), glm::vec3(1), 2000);
+            _scene->addModel("Palm.obj", glm::vec3(-0.3,-0.35,0.2), glm::vec3(0.2,0.5,0.1), 75);
+            _scene->addModel("Palm.obj", glm::vec3(0.1,-0.35,-0.1), glm::vec3(0.2,0.5,0.1), 75);
+            _scene->addModel("Palm.obj", glm::vec3(0.4,-0.35,0.1), glm::vec3(0.2,0.5,0.1), 75);
+            _scene->addModel("Palm.obj", glm::vec3(-0.4,-0.35,-0.3), glm::vec3(0.2,0.5,0.1), 75);
             break;
 
         case CLEAR:

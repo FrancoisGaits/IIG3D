@@ -35,6 +35,7 @@ private slots:
     void on_actionDemo_triggered();
     void on_actionUV_Sphere_triggered();
     void on_actionClear_triggered();
+    void on_actionModel_triggered();
 
 private:
     Ui::MainWindow *ui;
