@@ -3,8 +3,8 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 
-Model::Model(std::string &path, glm::vec3 color, unsigned div) : _color{color} {
-    mesh = loadMesh(path, div);
+Model::Model(std::string &name, glm::vec3 color, float div) : _name{name}, _color{color} {
+    mesh = loadMesh(name, div);
 
     mesh.load();
 }
@@ -12,11 +12,12 @@ Model::Model(std::string &path, glm::vec3 color, unsigned div) : _color{color} {
 std::string Model::infoString() const {
     std::stringstream mess;
     mess << "Model :" << std::endl;
+    mess << "    -nom : " << _name << std::endl;
     mess << "    -triangles : " << mesh.nbTriangles() << std::endl;
     return mess.str();
 }
 
-Mesh Model::loadMesh(std::string &path, unsigned div) {
+Mesh Model::loadMesh(std::string &name, float div) {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
@@ -25,7 +26,7 @@ Mesh Model::loadMesh(std::string &path, unsigned div) {
 
     Mesh tmpMesh;
 
-    path = "../src/Objects/" + path;
+    std::string path = "../src/Objects/" + name;
     bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, path.c_str());
 
     if (!ret) {
@@ -36,6 +37,7 @@ Mesh Model::loadMesh(std::string &path, unsigned div) {
         return tmpMesh;
     }
 
+    //Lecture typique avec duplication des sommets pour chaque faces, non necessaire mais standard
     for (const auto & shape : shapes) {
         size_t index_offset = 0;
         int ind = 0;
@@ -43,13 +45,15 @@ Mesh Model::loadMesh(std::string &path, unsigned div) {
             unsigned fv = shape.mesh.num_face_vertices[f];
             for (unsigned v = 0; v < fv; v++) {
                 tinyobj::index_t idx = shape.mesh.indices[index_offset + v];
-                tinyobj::real_t vx = attrib.vertices[3 * idx.vertex_index + 0];
+                tinyobj::real_t vx = attrib.vertices[3 * idx.vertex_index];
                 tinyobj::real_t vy = attrib.vertices[3 * idx.vertex_index + 1];
                 tinyobj::real_t vz = attrib.vertices[3 * idx.vertex_index + 2];
-                tinyobj::real_t nx = attrib.normals[3 * idx.normal_index + 0];
+                tinyobj::real_t nx = attrib.normals[3 * idx.normal_index];
                 tinyobj::real_t ny = attrib.normals[3 * idx.normal_index + 1];
                 tinyobj::real_t nz = attrib.normals[3 * idx.normal_index + 2];
 
+                //On pourrait bien sur utiliser la matrice model pour scale l'objet, mais les tailles varient
+                // énormément d'un modèle à l'autre, div permet de "normaliser" la taille
                 tmpMesh.addVertex(vx / div, vy / div, vz / div);
                 tmpMesh.addNormal(nx, ny, nz);
 

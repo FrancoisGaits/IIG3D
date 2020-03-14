@@ -9,7 +9,6 @@ out vec3 fragPos;
 out vec3 fragPosWorld;
 
 void main(){
-    // Note that we read the multiplication from right to left
     gl_Position = projection * view * model * vec4(position, 1.0f);
     normal = inormal;
     fragPos = position;

@@ -15,7 +15,7 @@ public:
     std::string infoString() final;
 
 private:
-    Mesh generateSphereAttributes(float radius, unsigned precision);
+    static Mesh generateSphereAttributes(float radius, unsigned precision);
 };
 
 /*------------------------------------------------------------------------------------------------------------------------*/

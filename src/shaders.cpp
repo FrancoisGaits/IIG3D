@@ -39,22 +39,22 @@ Shader::Shader(VertexShader vs, FragmentShader fs) : _vertexShader{vs}, _fragmen
     // 1. Generate the shader
     vertexshader = glCreateShader(GL_VERTEX_SHADER);
     // 2. set the source
-    glShaderSource(vertexshader, 1, &vShaderCode, NULL);
+    glShaderSource(vertexshader, 1, &vShaderCode, nullptr);
     // 3. Compile
     glCompileShader(vertexshader);
     // 4. test for compile error
     glGetShaderiv(vertexshader, GL_COMPILE_STATUS, &success);
     if (!success) {
-        glGetShaderInfoLog(vertexshader, 512, NULL, infoLog);
+        glGetShaderInfoLog(vertexshader, 512, nullptr, infoLog);
         std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
     fragmentshader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentshader, 1, &fShaderCode, NULL);
+    glShaderSource(fragmentshader, 1, &fShaderCode, nullptr);
     glCompileShader(fragmentshader);
     glGetShaderiv(fragmentshader, GL_COMPILE_STATUS, &success);
     if (!success) {
-        glGetShaderInfoLog(fragmentshader, 512, NULL, infoLog);
+        glGetShaderInfoLog(fragmentshader, 512, nullptr, infoLog);
         std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
@@ -68,7 +68,7 @@ Shader::Shader(VertexShader vs, FragmentShader fs) : _vertexShader{vs}, _fragmen
     // 4. Test for link errors
     glGetProgramiv(ID, GL_LINK_STATUS, &success);
     if (!success) {
-        glGetProgramInfoLog(ID, 512, NULL, infoLog);
+        glGetProgramInfoLog(ID, 512, nullptr, infoLog);
         std::cerr << "ERROR::SHADER::LINK_FAILED\n" << infoLog << std::endl;
     }
     glDeleteShader(vertexshader);

@@ -24,15 +24,15 @@ void MyOpenGLWidget::switchFragmentShader(FragmentShader fs) {
 }
 
 MyOpenGLWidget::~MyOpenGLWidget() {
-
+    delete _scene;
 }
 
 QSize MyOpenGLWidget::minimumSizeHint() const {
-    return QSize(50, 50);
+    return {50, 50};
 }
 
 QSize MyOpenGLWidget::sizeHint() const {
-    return QSize(768, 576);
+    return {768, 576};
 }
 
 void MyOpenGLWidget::cleanup() {
@@ -142,6 +142,11 @@ void MyOpenGLWidget::switchState(State s) {
     resetScene();
 }
 
+void MyOpenGLWidget::switchLighting(Lighting l) {
+    currLight = l;
+    resetScene();
+}
+
 void MyOpenGLWidget::resetScene() {
     makeCurrent();
     delete _scene;
@@ -165,11 +170,11 @@ void MyOpenGLWidget::resetScene() {
 
             break;
         case MODEL:
-            _scene->addModel("aya3.obj", glm::vec3(-0.1, -0.35, 0), glm::vec3(1), 2000);
-            _scene->addModel("Palm.obj", glm::vec3(-0.3, -0.35, 0.2), glm::vec3(0.2, 0.5, 0.1), 75);
-            _scene->addModel("Palm.obj", glm::vec3(0.1, -0.35, -0.1), glm::vec3(0.2, 0.5, 0.1), 75);
-            _scene->addModel("Palm.obj", glm::vec3(0.4, -0.35, 0.1), glm::vec3(0.2, 0.5, 0.1), 75);
-            _scene->addModel("Palm.obj", glm::vec3(-0.4, -0.35, -0.3), glm::vec3(0.2, 0.5, 0.1), 75);
+            _scene->addModel("aya3.obj", glm::vec3(-0.1, -0.35, 0), glm::vec3(1), 2000.f);
+            _scene->addModel("Palm.obj", glm::vec3(-0.3, -0.35, 0.2), glm::vec3(0.2, 0.5, 0.1), 75.f);
+            _scene->addModel("Palm.obj", glm::vec3(0.1, -0.35, -0.1), glm::vec3(0.2, 0.5, 0.1), 75.f);
+            _scene->addModel("Palm.obj", glm::vec3(0.4, -0.35, 0.1), glm::vec3(0.2, 0.5, 0.1), 75.f);
+            _scene->addModel("Palm.obj", glm::vec3(-0.4, -0.35, -0.3), glm::vec3(0.2, 0.5, 0.1), 75.f);
             break;
 
         case CLEAR:
@@ -193,11 +198,6 @@ void MyOpenGLWidget::resetScene() {
     }
     doneCurrent();
     update();
-}
-
-void MyOpenGLWidget::switchLighting(Lighting l) {
-    currLight = l;
-    resetScene();
 }
 
 std::string MyOpenGLWidget::sceneInfoString() {

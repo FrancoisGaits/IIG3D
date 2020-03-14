@@ -32,9 +32,11 @@ public:
 
     void addGeoSphere(float radius, unsigned precision, glm::vec3 position, glm::vec3 color = glm::vec3(1));
     void addUVSphere(float radius, unsigned precision, glm::vec3 position, glm::vec3 color = glm::vec3(1));
+    void addModel(const char *path, glm::vec3 position, glm::vec3 color = glm::vec3(1), float div = 2000);
+
     void addPointLight(glm::vec3 position, glm::vec3 color);
     void addSpotLight(glm::vec3 position, glm::vec3 color, glm::vec3 focus, float limit);
-    void addModel(const char *path, glm::vec3 position, glm::vec3 color = glm::vec3(1), unsigned div = 2000);
+
 
     std::string sceneInfoString();
 
@@ -53,7 +55,7 @@ private:
 
     std::unique_ptr<Camera> _camera;
 
-    int _button;
+    int _button{0};
     float _mousex{0};
     float _mousey{0};
 

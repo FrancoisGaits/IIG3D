@@ -5,19 +5,24 @@
 
 GeoSphere::GeoSphere(float radius, unsigned precision, glm::vec3 color) : Sphere(radius, static_cast<unsigned>(
         pow(3.5, precision - 1) + 1), color) {
+    //La precision servira au shader d'erreur, donc beaucoup plus sevère pour la GeoSphere
 
+    //Une subidivision de moins que de precision passée en argument
     mesh = generateSphereAttributes(radius, precision - 1);
 
     mesh.load();
 }
 
 Mesh GeoSphere::subdivide(Mesh &mesh, float radius) {
+
     Mesh tmpMesh;
-    tmpMesh.vertices = mesh.vertices;
-    cache.clear();
+    tmpMesh.vertices = mesh.vertices; //Les vertices initaux sont les mêmes
+    cache.clear(); //Remise à 0 du cache
+
+    //On itère sur les faces du maillage précédent
     for (unsigned i = 0; i < mesh.indices.size(); i += 3) {
-        unsigned a = mesh.indices[i];        //   a
-        unsigned b = mesh.indices[i + 1];      //  / \ ~
+        unsigned a = mesh.indices[i];          //   a
+        unsigned b = mesh.indices[i + 1];      //  / \ .
         unsigned c = mesh.indices[i + 2];      // b---c
 
         glm::vec3 v0 = glm::vec3(mesh.vertices[a * 3], mesh.vertices[a * 3 + 1], mesh.vertices[a * 3 + 2]);
@@ -28,26 +33,34 @@ Mesh GeoSphere::subdivide(Mesh &mesh, float radius) {
         unsigned e = divideEdge(b, c, radius, v1, v2, tmpMesh);
         unsigned f = divideEdge(c, a, radius, v2, v0, tmpMesh);
 
+        //Les nouveaux vertices ont étés créés et on a récuperé leurs indices
+
         tmpMesh.addTri(a, d, f);
         tmpMesh.addTri(d, b, e);
         tmpMesh.addTri(e, c, f);
         tmpMesh.addTri(d, e, f);
     }
+
+    //Approximation de sphère
     tmpMesh.normals = tmpMesh.vertices;
 
     return tmpMesh;
 }
 
+//Crée le vertex de milieu d'une arête et le place sur la sphère en évitant de le dupliquer
 unsigned GeoSphere::divideEdge(unsigned a, unsigned b, float radius, glm::vec3 &v1, glm::vec3 &v2, Mesh &tmpMesh) {
     if (a < b) {
         std::swap(a, b);
     }
+
+    //Si le vertex existe déjà on le retourne pour ne pas le dupliquer
     auto edge = std::pair<unsigned, unsigned>(a, b);
     auto it = cache.find(edge);
     if (it != cache.end()) {
         return it->second;
     }
 
+    //On crée le sommet et on l'ajoute au maillage
     glm::vec3 v = glm::normalize((v1 + v2) / 2.f) * radius;
 
     unsigned ret = tmpMesh.nbVertices();
@@ -57,10 +70,11 @@ unsigned GeoSphere::divideEdge(unsigned a, unsigned b, float radius, glm::vec3 &
     return ret;
 }
 
-
+//Créer le maillage
 Mesh GeoSphere::generateSphereAttributes(float radius, unsigned precision) {
     Mesh mesh;
 
+    //Coordonnées de base d'un icosahèdre
     mesh.vertices = {
             c1 * radius, c2 * radius, 0,
             c2 * radius, 0, c1 * radius,

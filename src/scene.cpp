@@ -89,7 +89,6 @@ void Scene::draw() {
 
         model->draw();
     }
-
 }
 
 void Scene::mouseclick(int button, float xpos, float ypos) {
@@ -153,7 +152,7 @@ void Scene::addUVSphere(float radius, unsigned precision, glm::vec3 position, gl
     spheres.back()->translate(position);
 }
 
-void Scene::addModel(const char *path, glm::vec3 position, glm::vec3 color, unsigned div) {
+void Scene::addModel(const char *path, glm::vec3 position, glm::vec3 color, float div) {
     std::string p(path);
     models.emplace_back(new Model(p, color, div));
     models.back()->translate(position);

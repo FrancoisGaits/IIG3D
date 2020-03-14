@@ -94,6 +94,8 @@ Mesh::~Mesh() {
     glDeleteVertexArrays(1, &_vao);
 }
 
+//On calcule la somme des tétraèdres formés par chaque face et l'origine
+//La sphère est convexe et contient l'origine, mais cela n'aura probablement pas de sens sur des objets chargés.
 float Mesh::volume() const {
     float vol = 0;
     for(unsigned i = 0; i<nbTriangles();++i) {

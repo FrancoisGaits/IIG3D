@@ -20,26 +20,26 @@ uniform int nbLight;
 
 uniform Light lights[N_MAX_LIGHT];
 
-vec3 calc_light(Light light, vec3 normal, vec3 frag_pos, vec3 view_dir) {
+vec3 calc_light(Light light, vec3 normal, vec3 fragPos, vec3 viewDir) {
 
-    float ambient_amp = 0.1;
+    float ambientAmp = 0.1;
     float spotFactor = 1;
 
     if (light.type == 1) {
-        spotFactor = dot(normalize(light.position - light.focus), normalize(light.position - frag_pos));
-        ambient_amp = 0.0;
+        spotFactor = dot(normalize(light.position - light.focus), normalize(light.position - fragPos));
+        ambientAmp = 0.0;
     }
 
-    vec3 ambient = ambient_amp * light.color;
+    vec3 ambient = ambientAmp * light.color;
     if (light.type != 1 || spotFactor > light.limit) {
 
-        vec3 light_dir = normalize(light.position - frag_pos);
+        vec3 light_dir = normalize(light.position - fragPos);
         float diff = max(dot(normal, light_dir), 0.0);
         vec3 diffuse = diff * light.color;
 
         float specular_strength = 0.5;
         vec3 reflect_dir = reflect(-light_dir, normal);
-        float spec = pow(max(dot(view_dir, reflect_dir), 0.0), 16);
+        float spec = pow(max(dot(viewDir, reflect_dir), 0.0), 16);
         vec3 specular = specular_strength * spec * light.color;
 
         return (ambient + diffuse + specular) * ((1.0 - (1.0 - spotFactor) * 1.0/(1.0 - light.limit)));

@@ -9,7 +9,7 @@
 
 class Model {
 public:
-    explicit Model(std::string &path, glm::vec3 color = glm::vec3(1), unsigned div = 2000);
+    explicit Model(std::string &name, glm::vec3 color = glm::vec3(1), float div = 2000.f);
 
     void draw() const;
 
@@ -17,13 +17,15 @@ public:
     const glm::mat4 &model() const;
 
 
-    Mesh loadMesh(std::string &path, unsigned div = 2000);
+    static Mesh loadMesh(std::string &path, float div = 2000.f);
 
     std::string infoString() const;
 
     void translate(glm::vec3 vec);
 
 private:
+    std::string _name;
+
     glm::vec3 _color;
     glm::mat4 _model;
     Mesh mesh;

@@ -26,6 +26,7 @@ Mesh UVSphere::generateSphereAttributes(float radius, unsigned precision) {
         float cphr = cosf(phi) * radius;
         float sphr = sinf(phi) * radius;
 
+        //On évite la duplication au sommet
         if (para == 0 || para == nbParallels - 1) {
             mesh.addVertex(cosf(theta) * cphr,
                            sphr,
@@ -47,6 +48,7 @@ Mesh UVSphere::generateSphereAttributes(float radius, unsigned precision) {
         phi += pasPhi;
     }
 
+    //Approximation de sphère
     mesh.normals = mesh.vertices;
 
     for (unsigned para = 0; para < nbParallels - 1; ++para) {
@@ -65,7 +67,7 @@ Mesh UVSphere::generateSphereAttributes(float radius, unsigned precision) {
                 unsigned b = (meri == nbMeridians ? 1 : meri + 1) + dec;                            // |    \       |
                 unsigned c = meri + nbMeridians + dec;                                              // |       \    |
                 unsigned d = (meri == nbMeridians ? nbMeridians + 1 : meri + nbMeridians + 1) + dec;// |          \ |
-                // d------------c
+                                                                                                    // d------------c
                 mesh.addQuad(a, b, c, d);
             }
         }
