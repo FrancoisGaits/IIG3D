@@ -74,7 +74,7 @@ unsigned GeoSphere::divideEdge(unsigned a, unsigned b, float radius, glm::vec3 &
 Mesh GeoSphere::generateSphereAttributes(float radius, unsigned precision) {
     Mesh mesh;
 
-    //Coordonnées de base d'un icosahèdre
+    //Coordonnées de base d'un icosaèdre
     mesh.vertices = {
             c1 * radius, c2 * radius, 0,
             c2 * radius, 0, c1 * radius,
